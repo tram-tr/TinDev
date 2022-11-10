@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-%!d8j37_8og&540njqfcl47fqt5n*zy)t1-il%_5v7u(+g&w!e
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['129.74.152.125']
 
 
 # Application definition
@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'TinDevApp.apps.TinDevAppConfig',
 ]
 
 MIDDLEWARE = [
