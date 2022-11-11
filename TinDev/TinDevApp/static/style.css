@@ -1,12 +1,21 @@
 h5{
     text-align: center;
 }
+img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+.card{
+    background-color: #3fa6fe !important;
+}
 .loginBody {
     padding-left: 60px;
     padding-right: 60px;
-    padding-top: 60px;
-    padding-bottom: 60px;
+    padding-top: 20px;
+    padding-bottom: 20px;
 }
+
 .title{
     text-align: center;
     font-size: xx-large;
