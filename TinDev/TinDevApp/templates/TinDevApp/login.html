@@ -18,20 +18,13 @@
         <div class="mx-auto" style="width: 20rem;">
             <div class="card text-white mb-3" style="max-width: 30rem;">
                 <div class="card-body">
-                    <h5 class="card-title">Login</h5>
-                    <form method="post" action ="">
-                        <div class="mb-3">
-                            <label class="form-label">Username</label>
-                            <input id="username "type="username" class="form-control">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Password</label>
-                            <input id="password" type="password" class="form-control">
-                        </div>
-                        <div class="col-md-12 text-center">
-                            <button type="submit" class="btn btn-light">Login</button>
-                        </div>
-                    </form>
+                    <h5 class="card-title">Candidate Login</h5>
+                        <p>{{ message }}</p>
+                        <form method="post">
+                            {{ form.as_p }}
+                            {% csrf_token %}
+                            <button type="submit" >Submit</button>
+                        </form>
                     <br>
                     <a href="" class="link-light">Join as Candidate</a>
                     <a href="" class="link-light">Join as Recruiter</a>
