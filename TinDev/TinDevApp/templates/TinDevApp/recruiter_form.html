@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>TinDev - Login</title>
+    <title>TinDev - Recruiter Login</title>
     <link rel="stylesheet" href="{% static 'style.css' %}"">
     <!-- Add Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -12,7 +12,8 @@
 </head>
 
 <body>
-
+    <img src="{% static 'Logo.jpg' %}" alt="TinDev Logo" width="250">
+		<h1> Create Recruiter Account </h1>
     <div class="loginBody">
         <form method="post"> {% csrf_token %}
             {{ form.as_p }}

@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>TinDev - Login</title>
+    <title>TinDev - Create Candidate</title>
     <link rel="stylesheet" href="{% static 'style.css' %}"">
     <!-- Add Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -13,10 +13,13 @@
 
 <body>
 
-    <div class="loginBody">
+    <img src="{% static 'Logo.jpg' %}" alt="TinDev Logo" width="250">
+		<h1> Create Candidate Account </h1>
+
+    <div class="form-group">
         <form method="post"> {% csrf_token %}
             {{ form.as_p }}
-            <input type="submit" value="Save">
+            	<input type="submit" value="Save">
         </form>
     </script>
     <!-- Import's Bootstrap JS -->

@@ -6,6 +6,16 @@ img {
     margin-left: auto;
     margin-right: auto;
 }
+
+
+body {
+    text-align: center;
+}
+form {
+    display: inline-block;
+}
+
+
 .card{
     background-color: #3fa6fe !important;
 }
