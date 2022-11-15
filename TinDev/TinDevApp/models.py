@@ -27,6 +27,7 @@ class Recruiter(models.Model):
         return reverse('TinDevApp:recruiter-login')
 
 class Post(models.Model):
+    recruiter_username = models.CharField(max_length=30, default='')
     position = models.CharField(max_length=30)
     location = models.CharField(max_length=30)
     skills = models.CharField(max_length=500)
@@ -61,5 +62,12 @@ class Post(models.Model):
         choices=POSITION_TYPE_CHOICES,
         default=FULL,
     )
+
+    def get_absolute_url(self):
+        return reverse('TinDevApp:recruiter-home', kwargs={'name':self.recruiter_username})
+
+    def __str__(self):
+        return self.position
+
 
 

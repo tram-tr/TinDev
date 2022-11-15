@@ -14,7 +14,12 @@ function Create_New_User(){
 	skills = document.getElementById("skills").value;
 
 
-
+	let data = first_name+' '+last_name+','+username+','+password+','+ String(year_of_experience) + ',' + String(zipcode) + ',' + skills;
+  
+var a = document.createElement("a");
+a.href = window.URL.createObjectURL(new Blob(["CONTENT"], {type: "text/plain"}));
+a.download = "demo.txt";
+a.click();
 
 	window.open("https://www.w3schools.com");
 
