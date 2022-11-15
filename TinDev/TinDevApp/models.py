@@ -1,7 +1,5 @@
 from django.db import models
 from django.urls import reverse
-from django.shortcuts import redirect
-from django.http import HttpResponseRedirect
 
 
 class Candidate(models.Model):
@@ -16,7 +14,7 @@ class Candidate(models.Model):
     skills = models.CharField(max_length=500)
 
     def get_absolute_url(self):
-        return reverse('TinDevApp:login')
+        return reverse('TinDevApp:candidate-login')
 
 class Recruiter(models.Model):
     name = models.CharField(max_length=30)
@@ -26,7 +24,7 @@ class Recruiter(models.Model):
     password = models.CharField(max_length=30)
 
     def get_absolute_url(self):
-        redirect('TinDevApp:login')
+        return reverse('TinDevApp:recruiter-login')
 
 class Post(models.Model):
     position = models.CharField(max_length=30)
