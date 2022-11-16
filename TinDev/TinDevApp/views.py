@@ -55,6 +55,9 @@ class RecruiterCreateView(CreateView):
     model = Recruiter
     fields = ['name', 'company', 'zipcode', 'username', 'password']
 
+
+# Creating/Editing/Deleting Posts # 
+
 class PostCreateView(CreateView):
     model = Post
     fields = ['recruiter_username', 'position', 'location', 'skills', 'description', 'expiration_date', 'pos_type', 'active']
@@ -64,9 +67,24 @@ class PostUpdateView(CreateView):
     fields = ['recruiter_username', 'position', 'location', 'skills', 'description', 'expiration_date', 'pos_type', 'active']
     template_name_suffix = '_update_form'
 
-def PostViewRecruiter(request, name):
+
+
+def PostViewRecruiterAll(request, name):
     post_list = Post.objects.filter(recruiter_username=name)
-    return render(request, 'TinDevApp/recruiter_view_post.html', {'list':post_list, 'name':name})
+    return render(request, 'TinDevApp/recruiter_view_post.html', {'list':post_list, 'name':name, 'active':'All'})
+def PostViewRecruiterActive(request, name):
+    post_list = Post.objects.filter(recruiter_username=name,active='A')
+    return render(request, 'TinDevApp/recruiter_view_post.html', {'list':post_list, 'name':name, 'active':'Active'})
+def PostViewRecruiterInactive(request, name):
+    post_list = Post.objects.filter(recruiter_username=name,active='I')
+    return render(request, 'TinDevApp/recruiter_view_post.html', {'list':post_list, 'name':name, 'active':'Inactive'})
+
+
+def PostDeleteRecruiter(request, name, id_num):
+    post = Post.objects.filter(id=id_num)
+    post.delete()
+    return render(request, 'TinDevApp/recruiter_home.html', {'name':name} )
+
 
 
 
