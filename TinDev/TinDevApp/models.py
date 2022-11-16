@@ -30,6 +30,7 @@ class Post(models.Model):
     recruiter_username = models.CharField(max_length=30, default='')
     position = models.CharField(max_length=30)
     location = models.CharField(max_length=30)
+    company = models.CharField(max_length=30)
     skills = models.CharField(max_length=500)
     description = models.CharField(max_length=500)
     expiration_date = models.DateField()

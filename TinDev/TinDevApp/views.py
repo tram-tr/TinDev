@@ -60,7 +60,7 @@ class RecruiterCreateView(CreateView):
 
 class PostCreateView(CreateView):
     model = Post
-    fields = ['recruiter_username', 'position', 'location', 'skills', 'description', 'expiration_date', 'pos_type', 'active']
+    fields = ['recruiter_username', 'position', 'company','location', 'skills', 'description', 'expiration_date', 'pos_type', 'active']
 
 class PostUpdateView(CreateView):
     model = Post

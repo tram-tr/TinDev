@@ -25,8 +25,21 @@
 			<ul class="list-group">
 					<li class="list-group-item"> <h1>Position. {{item.position}} </h1>
 						<p> 
-							<h2> &emsp; Skills: {{item.skills}}</h2>		
-							<h2> &emsp; Status: {{item.active}}</h2>		
+							<h2> &emsp; Company: {{item.company}}</h2>
+							<h2> &emsp; Skills: {{item.skills}}</h2>
+							{% if item.active == 'A' %}		
+								<h2> &emsp; Status: Active</h2>
+							{% else %}
+								<h2> &emsp; Status: Inactive</h2>
+							{% endif %}
+
+							{% if item.pos_type == 'FULL' %}		
+								<h2> &emsp; Status: Full-Time</h2>
+							{% else %}
+								<h2> &emsp; Status: Part-Time</h2>
+							{% endif %}
+
+
 					  </p>
 
 						<p> 
