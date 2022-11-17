@@ -34,9 +34,9 @@ class Post(models.Model):
     skills = models.CharField(max_length=500)
     description = models.CharField(max_length=500)
     expiration_date = models.DateField()
+    applicant_count  = models.IntegerField(default=0)
+
     
-
-
     FULL = 'FULL'
     PART = 'PART'
     POSITION_TYPE_CHOICES = [
@@ -75,14 +75,20 @@ class Application(models.Model):
     candidate_name = models.CharField(max_length=30)
     candidate_username = models.CharField(max_length=30)
 
+    job_title = models.CharField(max_length=30)
+    job_company = models.CharField(max_length=30)
+
+
     
     APLY = 'APLY'
     REJT = 'REJT'
     ACCT = 'ACCT'
+    EXND = 'EXND'
     POSITION_TYPE_CHOICES = [
         (APLY, 'Applied/Pending'),
         (REJT, 'Rejected'),
         (ACCT, 'Accepted'),
+        (EXND, 'Offer Extended'),
     ]
 
     status = models.CharField(

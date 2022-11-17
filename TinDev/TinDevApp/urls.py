@@ -16,6 +16,8 @@ urlpatterns = [
     path('recruiter/home/<slug:name>/post/view/all', views.PostViewRecruiterAll, name = 'postViewAll'),
     path('recruiter/home/<slug:name>/post/view/active', views.PostViewRecruiterActive, name = 'postViewActive'),
     path('recruiter/home/<slug:name>/post/view/inactive', views.PostViewRecruiterInactive, name = 'postViewInactive'),
+    path('recruiter/home/<slug:name>/post/view/applicant', views.PostViewRecruiterApplicant, name = 'postViewApplicant'),
+
     path('recruiter/home/<slug:name>/post/delete/<int:id_num>', views.PostDeleteRecruiter, name = 'postDelete'),
 
     path('candidate/home/<slug:name>/post/view/all', views.PostViewCandidateAll, name = 'CandidateView'),
@@ -24,6 +26,9 @@ urlpatterns = [
 
 
     path('candidate/home/<slug:name>/post/<int:id_num>/apply', views.CandidateApply, name = 'CandidateApply'),
+    path('candidate/home/<slug:name>/post/<int:id_num>/unapply', views.CandidateRemoveApplication, name = 'CandidateUnapply'),
+
+    path('candidate/home/<slug:name>/application/view', views.CandidateViewApplication, name = 'ApplicationView'),
 
     
 ]

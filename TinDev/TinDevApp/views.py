@@ -3,6 +3,8 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from TinDevApp.models import *
 from . import forms
 from django.shortcuts import redirect
+from django.db.models import F
+
 
 def redirect_view(request, url):
     response = redirect(url)
@@ -78,37 +80,75 @@ def PostViewRecruiterActive(request, name):
 def PostViewRecruiterInactive(request, name):
     post_list = Post.objects.filter(recruiter_username=name,active='I')
     return render(request, 'TinDevApp/recruiter_view_post.html', {'list':post_list, 'name':name, 'active':'Inactive'})
+def PostViewRecruiterApplicant(request, name):
+    post_list = list(Post.objects.all())
+    post_list = [x for x in post_list if x.applicant_count > 0]
+    return render(request, 'TinDevApp/recruiter_view_post.html', {'list':post_list, 'name':name, 'active':'Applicant-Filled'})
 def PostDeleteRecruiter(request, name, id_num):
     post = Post.objects.filter(id=id_num)
     post.delete()
+    application = Application.objects.filter(job_num=id_num)
+    for element in application:
+        element.delete()
     return render(request, 'TinDevApp/recruiter_home.html', {'name':name} )
 
 
 # View Posts of Candidate #
 def PostViewCandidateAll(request, name):
-    post_list = Post.objects.all()
-    return render(request, 'TinDevApp/candidate_view_post.html', {'list':post_list, 'name':name, 'active':'All'})
+    application_list = list(Application.objects.filter(candidate_username=name).values_list('job_num',flat=True))
+    post_list = list(Post.objects.all())
+    applied_list = [x for x in post_list if x.id in application_list]
+    post_list = [x for x in post_list if x not in applied_list]
+
+    return render(request, 'TinDevApp/candidate_view_post.html', {'post_list':post_list, 'apply_list': applied_list, 'name':name, 'active':'All'})
 def PostViewCandidateActive(request, name):
-    post_list = Post.objects.filter(active='A')
-    return render(request, 'TinDevApp/candidate_view_post.html', {'list':post_list, 'name':name, 'active':'Active'})
+    application_list = Application.objects.filter(candidate_username=name).values_list('job_num',flat=True)
+    post_list = list(Post.objects.filter(active='A'))
+    applied_list = [x for x in post_list if x.id in application_list]
+    post_list = [x for x in post_list if x not in applied_list]
+
+    return render(request, 'TinDevApp/candidate_view_post.html', {'post_list':post_list, 'apply_list': applied_list, 'name':name, 'active':'Active'})
+
 def PostViewCandidateInactive(request, name):
-    post_list = Post.objects.filter(active='I')
-    return render(request, 'TinDevApp/candidate_view_post.html', {'list':post_list, 'name':name, 'active':'Inactive'})
+    application_list = Application.objects.filter(candidate_username=name).values_list('job_num',flat=True)
+    post_list = list(Post.objects.filter(active='I'))
+    applied_list = [x for x in post_list if x.id in application_list]
+    post_list = [x for x in post_list if x not in applied_list]
+    return render(request, 'TinDevApp/candidate_view_post.html', {'post_list':post_list, 'apply_list': applied_list, 'name':name, 'active':'Active'})
+
 
 
 # Applications #
 
-def CandidateApply(request, name, id_num):
-    candidate = Candidate.objects.filter(username=name)
-    post = Post.objects.filter(id=id_num)
-    
-    application = Application(job_num=id_num, candidate_name=candidate[0].name, candidate_username=name,status='APLY')
-    application.save()
+#Application Add/Delete #
 
-    
+def CandidateApply(request, name, id_num):
+    apply = Application.objects.filter(candidate_username=name, job_num=id_num)
+    if (len(apply) == 0):
+        candidate = Candidate.objects.filter(username=name)
+        post = Post.objects.filter(id=id_num)
+        post.update(applicant_count=F('applicant_count') + 1)
+
+
+        application = Application(job_num=id_num, candidate_name=candidate[0].name, candidate_username=name,status='APLY',job_title=post[0].position, job_company=post[0].company)
+        application.save()
+
     return render(request, 'TinDevApp/candidate_apply_post.html', {'name':name})
 
+def CandidateRemoveApplication(request, name, id_num):
+    apply = Application.objects.filter(candidate_username=name, job_num=id_num)
+    apply[0].delete()
+    post = Post.objects.filter(id=id_num)
+    post.update(applicant_count=F('applicant_count') - 1)
 
+    return render(request, 'TinDevApp/candidate_apply_post.html', {'name':name})
+
+#Application View
+
+def CandidateViewApplication(request, name):
+    apply = Application.objects.filter(candidate_username=name)
+
+    return render(request, 'TinDevApp/candidate_view_applications.html', {'list':apply, 'name':name})
 
 
 
