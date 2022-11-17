@@ -5,7 +5,7 @@ from django.urls import reverse
 class Candidate(models.Model):
     name = models.CharField(max_length=30)
 
-    username = models.CharField(max_length=30)
+    username = models.CharField(max_length=30,unique=True)
     password = models.CharField(max_length=30)
 
     years = models.IntegerField()
@@ -70,5 +70,25 @@ class Post(models.Model):
     def __str__(self):
         return self.position
 
+class Application(models.Model):
+    job_num = models.IntegerField()
+    candidate_name = models.CharField(max_length=30)
+    candidate_username = models.CharField(max_length=30)
+
+    
+    APLY = 'APLY'
+    REJT = 'REJT'
+    ACCT = 'ACCT'
+    POSITION_TYPE_CHOICES = [
+        (APLY, 'Applied/Pending'),
+        (REJT, 'Rejected'),
+        (ACCT, 'Accepted'),
+    ]
+
+    status = models.CharField(
+        max_length=4,
+        choices=POSITION_TYPE_CHOICES,
+        default=APLY,
+    )
 
 
