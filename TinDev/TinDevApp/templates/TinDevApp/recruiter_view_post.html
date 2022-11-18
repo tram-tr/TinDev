@@ -21,10 +21,10 @@
 				<a href="{% url 'TinDevApp:postViewActive' name=name %}" class="btn btn-primary" role="button">Active Posts</a>
 				<a href="{% url 'TinDevApp:postViewInactive' name=name %}" class="btn btn-primary" role="button">Inactive Posts</a>
 				<a href="{% url 'TinDevApp:postViewApplicant' name=name %}" class="btn btn-primary" role="button">Applicant-Filled Posts</a>
-
 				<a href="{% url 'TinDevApp:recruiter-home' name=name %}" class="btn btn-primary" role="button">Home</a>
 			</center>
 		</p>
+
 		{%for item in list%}
 			<ul class="list-group">
 					<li class="list-group-item"> 

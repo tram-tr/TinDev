@@ -16,17 +16,27 @@
 		<h1><center>{{active}} Posts</center></h1>
 		<p>
 			<center>
-
 				<a href="{% url 'TinDevApp:CandidateViewActive' name=name %}" class="btn btn-primary" role="button">All Active Posts</a>
 				<a href="{% url 'TinDevApp:CandidateViewInactive' name=name %}" class="btn btn-primary" role="button">All Inactive Posts</a>
 				<a href="{% url 'TinDevApp:candidate-home' name=name %}" class="btn btn-primary" role="button">Return Home</a>
 			</center>
 		</p>
+
+
+		<form action="{% url 'TinDevApp:CandidateSearchDescription' name%}" method="get">
+			<h3>Search Bar (Descriptions):	 <input name="q" type="text" placeholder="Search Descriptions..."></h3>
+		</form>
+
+		<form action="{% url 'TinDevApp:CandidateSearchZipcode' name%}" method="get">
+			<h3>Search Bar (ZipCode): <input name="q" type="number" placeholder="Search ZipCodes..."></h3>
+		</form>
+
 		{%for item in post_list%}
 			<ul class="list-group">
 					<li class="list-group-item"> 
-						<h1>Position: {{item.position}} <span class="w3-badge w3-green"> {{item.applicant_count}} </span> </h1>
+						<h1>Position: {{item.position}} </pre><span class="w3-badge w3-green"></pre>{{item.applicant_count}} </span> </h1>
 						<p> 
+							<h2> &emsp; Description: {{item.description}}</h2>
 							<h2> &emsp; Company: {{item.company}}</h2>
 							<h2> &emsp; Skills: {{item.skills}}</h2>
 							{% if item.active == 'A' %}		
@@ -52,7 +62,9 @@
 		{%for item in apply_list%}
 		   <ul class="list-group">
 				   <li class="list-group-item">
-						<h1>Position: {{item.position}} <span class="w3-badge w3-green"> {{item.applicant_count}} </span> </h1>
+						<h1>Position: {{item.position}} 
+							<span class="w3-badge w3-green"> {{item.applicant_count}} </span> 
+						</h1>
 					   <p> 
 						   <h2> &emsp; Company: {{item.company}}</h2>
 						   <h2> &emsp; Skills: {{item.skills}}</h2>

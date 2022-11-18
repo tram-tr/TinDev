@@ -4,6 +4,7 @@ from TinDevApp.models import *
 from . import forms
 from django.shortcuts import redirect
 from django.db.models import F
+from django.db.models import Q
 
 
 def redirect_view(request, url):
@@ -114,8 +115,33 @@ def PostViewCandidateInactive(request, name):
     post_list = list(Post.objects.filter(active='I'))
     applied_list = [x for x in post_list if x.id in application_list]
     post_list = [x for x in post_list if x not in applied_list]
-    return render(request, 'TinDevApp/candidate_view_post.html', {'post_list':post_list, 'apply_list': applied_list, 'name':name, 'active':'Active'})
+    return render(request, 'TinDevApp/candidate_view_post.html', {'post_list':post_list, 'apply_list': applied_list, 'name':name, 'active':'Inactive'})
 
+def PostViewCandidateSearchDescription(request, name):
+    application_list = Application.objects.filter(candidate_username=name).values_list('job_num',flat=True)
+    post_list = list(Post.objects.all())
+
+    query = request.GET.get("q")
+    post_list = Post.objects.filter(
+        Q(description__icontains=query) 
+    )
+
+    applied_list = [x for x in post_list if x.id in application_list]
+    post_list = [x for x in post_list if x not in applied_list]
+    return render(request, 'TinDevApp/candidate_view_post.html', {'post_list':post_list, 'apply_list': applied_list, 'name':name, 'active':'Description Searched'})
+
+def PostViewCandidateSearchZipCode(request, name):
+    application_list = Application.objects.filter(candidate_username=name).values_list('job_num',flat=True)
+    post_list = list(Post.objects.all())
+
+    query = request.GET.get("q")
+    post_list = Post.objects.filter(
+        Q(location__icontains=query) 
+    )
+
+    applied_list = [x for x in post_list if x.id in application_list]
+    post_list = [x for x in post_list if x not in applied_list]
+    return render(request, 'TinDevApp/candidate_view_post.html', {'post_list':post_list, 'apply_list': applied_list, 'name':name, 'active':'Zipcode Searched'})
 
 
 # Applications #
