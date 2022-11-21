@@ -4,14 +4,20 @@ from django.urls import reverse
 
 class Candidate(models.Model):
     name = models.CharField(max_length=30)
-
     username = models.CharField(max_length=30,unique=True)
     password = models.CharField(max_length=30)
-
-    years = models.IntegerField()
     zipcode = models.IntegerField()
-
     skills = models.CharField(max_length=500)
+    YEARS = (
+        ('0-1', '0-1'),
+        ('2-4', '2-4'),
+        ('5-9', '5-9'),
+        ('10+', '10+')
+    )
+    years = models.IntegerField(choices=YEARS, default='0-1')
+
+    def __str__ (self):
+        return self.name
 
     def get_absolute_url(self):
         return reverse('TinDevApp:candidate-login')
@@ -22,6 +28,9 @@ class Recruiter(models.Model):
     zipcode  = models.IntegerField()
     username = models.CharField(max_length = 30)
     password = models.CharField(max_length=30)
+
+    def __str__ (self):
+        return self.name
 
     def get_absolute_url(self):
         return reverse('TinDevApp:recruiter-login')

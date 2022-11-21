@@ -50,13 +50,29 @@ def RecruiterPage(request, name):
 def CandidatePage(request, name):
     return render(request, 'TinDevApp/candidate_home.html', {'name': name})
 
-class CandidateCreateView(CreateView):
-    model = Candidate
-    fields = ['name', 'username', 'password', 'years', 'zipcode', 'skills']
+# Candidate's register page
+def CandidateCreateView(request):
+    if request.method == 'POST':
+        form = forms.CandidateRegisterForm()
+        if form.is_valid():
+            form.save
+        message = 'Account created successfully'
+    else:
+        form = forms.CandidateRegisterForm()
+        context = {'form': form}
+    return render(request, 'TinDevApp/candidate_form.html', context)
 
-class RecruiterCreateView(CreateView):
-    model = Recruiter
-    fields = ['name', 'company', 'zipcode', 'username', 'password']
+# Recruiter's register page
+def RecruiterCreateView(request):
+    if request.method == 'POST':
+        form = forms.RecruiterRegisterForm()
+        if form.is_valid():
+            form.save
+        message = 'Account created successfully'
+    else:
+        form = forms.RecruiterRegisterForm()
+        context = {'form': form}
+    return render(request, 'TinDevApp/recruiter_form.html', context)
 
 
 # Creating/Editing/Deleting Posts # 
