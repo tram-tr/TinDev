@@ -5,12 +5,14 @@ from . import forms
 from django.shortcuts import redirect
 from django.db.models import F
 from django.db.models import Q
+from django.http import HttpResponse
 
 
 def redirect_view(request, url):
     response = redirect(url)
     return response
 
+# Candidate's login page
 def candidateLoginPage(request):
     form = forms.LoginForm()
     message = ''
@@ -19,6 +21,7 @@ def candidateLoginPage(request):
         if form.is_valid():
             user = Candidate.objects.filter(username = form.cleaned_data['username'], password = form.cleaned_data['password'])
             if user:
+                request.session['candidate_user'] = user[0].username
                 message = f'Hello {user[0].name}'
                 response = redirect(reverse('TinDevApp:candidate-home',kwargs={'name':user[0].username}))
                 return response
@@ -27,6 +30,7 @@ def candidateLoginPage(request):
                 
     return render(request, 'TinDevApp/candidate_login.html', context={'form': form, 'message':message})
 
+# Recruiter's login page
 def recruiterLoginPage(request):
     form = forms.LoginForm()
     message = ''
@@ -35,6 +39,8 @@ def recruiterLoginPage(request):
         if form.is_valid():
             user = Recruiter.objects.filter(username = form.cleaned_data['username'], password = form.cleaned_data['password'])
             if user:
+                # marked the user as the current user
+                request.session['recruiter_user'] = user[0].username
                 message = f'Hello {user[0].name}'
                 response = redirect(reverse('TinDevApp:recruiter-home', kwargs={'name':user[0].username}))
                 return response
@@ -43,21 +49,40 @@ def recruiterLoginPage(request):
 
     return render(request, 'TinDevApp/recruiter_login.html', context={'form': form, 'message':message})
 
+# Recruiter's home page
 def RecruiterPage(request, name):
-    return render(request, 'TinDevApp/recruiter_home.html', {'name':name})
+    # check if the user is the current user
+    if name in request.session['recruiter_user']:
+        current_user = request.session['recruiter_user']
+    else:
+        # if not redirect to recruiter login
+        return redirect('TinDevApp:recruiter-login')
 
+    return render(request, 'TinDevApp/recruiter_home.html', {'name':current_user})
+
+# Candidate's home page
 def CandidatePage(request, name):
-    return render(request, 'TinDevApp/candidate_home.html', {'name': name})
+    # check if the user is the current user
+    if name in request.session['candidate_user']:
+        current_user = request.session['candidate_user']
+    else:
+        # if not redirect to candidate login
+        return redirect('TinDevApp:candidate-login')
+    return render(request, 'TinDevApp/candidate_home.html', {'name': current_user})
 
 # Candidate's register page
 def CandidateCreateView(request):
     if request.method == 'POST':
         form = forms.CandidateRegisterForm(request.POST)
         if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get('username')
-            response = redirect(reverse('TinDevApp:candidate-home',kwargs={'name':username}))
-            return response
+            # check if the username already exists
+            new_username = form.cleaned_data.get('username')
+            if Candidate.objects.filter(username=new_username).count() > 0:
+                return HttpResponse('Username already exists.')
+            else:
+                # save data and redirect to login
+                form.save()
+                return redirect('TinDevApp:candidate-login')
     else:
         form = forms.CandidateRegisterForm()
 
@@ -68,10 +93,12 @@ def RecruiterCreateView(request):
     if request.method == 'POST':
         form = forms.RecruiterRegisterForm(request.POST)
         if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get('username')
-            response = redirect(reverse('TinDevApp:recruiter-home',kwargs={'name':username}))
-            return response
+            new_username = form.cleaned_data.get('username')
+            if Recruiter.objects.filter(username=new_username).count() > 0:
+                return HttpResponse('Username already exists.')
+            else:
+                form.save()
+                return redirect('TinDevApp:candidate-login')
     else:
         form = forms.RecruiterRegisterForm()
     
