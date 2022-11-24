@@ -25,8 +25,7 @@ def candidateLoginPage(request):
             else:
                 message = f'Login Failed'
                 
-                
-    return render(request, 'TinDevApp/candidatelogin.html', context={'form': form, 'message':message})
+    return render(request, 'TinDevApp/candidate_login.html', context={'form': form, 'message':message})
 
 def recruiterLoginPage(request):
     form = forms.LoginForm()
@@ -42,7 +41,7 @@ def recruiterLoginPage(request):
             else:
                 message = 'Login Failed'
 
-    return render(request, 'TinDevApp/recruiterlogin.html', context={'form': form, 'message':message})
+    return render(request, 'TinDevApp/recruiter_login.html', context={'form': form, 'message':message})
 
 def RecruiterPage(request, name):
     return render(request, 'TinDevApp/recruiter_home.html', {'name':name})
@@ -53,26 +52,30 @@ def CandidatePage(request, name):
 # Candidate's register page
 def CandidateCreateView(request):
     if request.method == 'POST':
-        form = forms.CandidateRegisterForm()
+        form = forms.CandidateRegisterForm(request.POST)
         if form.is_valid():
-            form.save
-        message = 'Account created successfully'
+            form.save()
+            username = form.cleaned_data.get('username')
+            response = redirect(reverse('TinDevApp:candidate-home',kwargs={'name':username}))
+            return response
     else:
         form = forms.CandidateRegisterForm()
-        context = {'form': form}
-    return render(request, 'TinDevApp/candidate_form.html', context)
+
+    return render(request, 'TinDevApp/candidate_form.html', context={'form': form})
 
 # Recruiter's register page
 def RecruiterCreateView(request):
     if request.method == 'POST':
-        form = forms.RecruiterRegisterForm()
+        form = forms.RecruiterRegisterForm(request.POST)
         if form.is_valid():
-            form.save
-        message = 'Account created successfully'
+            form.save()
+            username = form.cleaned_data.get('username')
+            response = redirect(reverse('TinDevApp:recruiter-home',kwargs={'name':username}))
+            return response
     else:
         form = forms.RecruiterRegisterForm()
-        context = {'form': form}
-    return render(request, 'TinDevApp/recruiter_form.html', context)
+    
+    return render(request, 'TinDevApp/recruiter_form.html', context={'form': form})
 
 
 # Creating/Editing/Deleting Posts # 

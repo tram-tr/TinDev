@@ -8,13 +8,7 @@ class Candidate(models.Model):
     password = models.CharField(max_length=30)
     zipcode = models.IntegerField()
     skills = models.CharField(max_length=500)
-    YEARS = (
-        ('0-1', '0-1'),
-        ('2-4', '2-4'),
-        ('5-9', '5-9'),
-        ('10+', '10+')
-    )
-    years = models.IntegerField(choices=YEARS, default='0-1')
+    years = models.IntegerField()
 
     def __str__ (self):
         return self.name

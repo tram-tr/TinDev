@@ -1,0 +1,22 @@
+{% extends "TinDevApp/base_login.html" %}
+
+{% block title %}TinDev - Recruiter's Login{% endblock %}
+
+{% block content %}
+<div class="card-body">
+    <h5 class="card-title">Recruiter Login</h5>
+        <p>{{ message }}</p>
+        <form method="post">
+            {{ form.as_p }}
+            {% csrf_token %}
+            <div class="col-md-12 text-center">
+                <button type="submit" class="btn btn-light">Login</button>
+            </div>
+        </form>
+    <br>
+    <div class="col-md-12 text-center">
+        <a href="{% url 'TinDevApp:recruiterAdd' %}" class="link-light">Join as Recruiter</a>
+        <a href="{% url 'TinDevApp:candidate-login' %}" class="link-light">Login as Candidate</a>
+    </div>
+</div>
+{% endblock %}

@@ -3,8 +3,8 @@ from . import views
 
 app_name = "TinDev"
 urlpatterns = [
-    path('candidatelogin/', views.candidateLoginPage, name='candidate-login'),
-    path('recruiterlogin/', views.recruiterLoginPage, name='recruiter-login'),
+    path('candidate/login/', views.candidateLoginPage, name='candidate-login'),
+    path('recruiter/login/', views.recruiterLoginPage, name='recruiter-login'),
 
     path('recruiter/home/<slug:name>', views.RecruiterPage, name='recruiter-home'),
     path('candidate/home/<slug:name>', views.CandidatePage, name='candidate-home'),
