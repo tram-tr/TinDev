@@ -2,6 +2,7 @@ from django.db import models
 from django.urls import reverse
 
 
+# Candidate's Model
 class Candidate(models.Model):
     name = models.CharField(max_length=30)
     username = models.CharField(max_length=30,unique=True)
@@ -16,6 +17,7 @@ class Candidate(models.Model):
     def get_absolute_url(self):
         return reverse('TinDevApp:candidate-login')
 
+# Recruiter's Model
 class Recruiter(models.Model):
     name = models.CharField(max_length=30)
     company = models.CharField(max_length=30)

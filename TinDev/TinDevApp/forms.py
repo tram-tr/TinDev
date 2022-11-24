@@ -1,38 +1,36 @@
 from django import forms
 from TinDevApp.models import *
 
+# New Candidate Form
 class CandidateRegisterForm(forms.ModelForm):
     class Meta:
         model = Candidate
         fields = ['name', 'username', 'password', 'zipcode', 'skills', 'years']
         widgets = {
-            'password': forms.PasswordInput(),
+            'name': forms.TextInput(attrs={'placeholder': 'Full Name'}),
+            'username' : forms.TextInput(attrs={'placeholder': 'Username'}),
+            'password': forms.PasswordInput(attrs={'placeholder': 'Password'}),
+            'zipcode' : forms.NumberInput(attrs={'placeholder': 'Zip Code'}),
+            'skills': forms.TextInput(attrs={'placeholder': 'List of Skills'}),
+            'years' :  forms.NumberInput(attrs={'placeholder': 'Years of Experience'}),
         }
-        labels = {
-            'name' : 'Full Name',
-            'username' : 'Username',
-            'password' : 'Password',
-            'password2' : 'Confirm Password',
-            'zipcode' : 'Zip Code',
-            'skills': 'List of Skills',
-            'years' : 'Years of Experience'
-        }     
+        labels = dict.fromkeys(fields, '')
 
+# New Recruiter Form
 class RecruiterRegisterForm(forms.ModelForm):
     class Meta:
         model = Recruiter
         fields = ['name', 'company', 'username', 'password', 'zipcode']
         widgets = {
-            'password': forms.PasswordInput(),
+            'name': forms.TextInput(attrs={'placeholder': 'Full Name'}),
+            'company': forms.TextInput(attrs={'placeholder': 'Company'}),
+            'username' : forms.TextInput(attrs={'placeholder': 'Username'}),
+            'password': forms.PasswordInput(attrs={'placeholder': 'Password'}),
+            'zipcode' : forms.NumberInput(attrs={'placeholder': 'Zip Code'}),
         }
-        labels = {
-            'name': 'Full Name',
-            'company': 'Company',
-            'username': 'Username',
-            'password': 'Password',
-            'zipcode': 'Zip Code'
-        }
+        labels = dict.fromkeys(fields, '')
 
+# Login Form
 class LoginForm(forms.Form):
-    username = forms.CharField(max_length=30)
-    password = forms.CharField(max_length=30, widget=forms.PasswordInput)
+    username = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'placeholder': 'Username'}), label=False)
+    password = forms.CharField(max_length=30, widget=forms.PasswordInput(attrs={'placeholder': 'Password'}), label=False)

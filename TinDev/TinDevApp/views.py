@@ -19,15 +19,16 @@ def candidateLoginPage(request):
     if request.method == 'POST':
         form = forms.LoginForm(request.POST)
         if form.is_valid():
+            # check if the login succeed
             user = Candidate.objects.filter(username = form.cleaned_data['username'], password = form.cleaned_data['password'])
             if user:
+                # mark the user as the current user
                 request.session['candidate_user'] = user[0].username
                 message = f'Hello {user[0].name}'
                 response = redirect(reverse('TinDevApp:candidate-home',kwargs={'name':user[0].username}))
                 return response
             else:
                 message = f'Login Failed'
-                
     return render(request, 'TinDevApp/candidate_login.html', context={'form': form, 'message':message})
 
 # Recruiter's login page
@@ -37,16 +38,16 @@ def recruiterLoginPage(request):
     if request.method == 'POST':
         form = forms.LoginForm(request.POST)
         if form.is_valid():
+            # check if the login succeed
             user = Recruiter.objects.filter(username = form.cleaned_data['username'], password = form.cleaned_data['password'])
             if user:
-                # marked the user as the current user
+                # mark the user as the current user
                 request.session['recruiter_user'] = user[0].username
                 message = f'Hello {user[0].name}'
                 response = redirect(reverse('TinDevApp:recruiter-home', kwargs={'name':user[0].username}))
                 return response
             else:
-                message = 'Login Failed'
-
+                message = f'Login Failed'
     return render(request, 'TinDevApp/recruiter_login.html', context={'form': form, 'message':message})
 
 # Recruiter's home page
@@ -57,7 +58,6 @@ def RecruiterPage(request, name):
     else:
         # if not redirect to recruiter login
         return redirect('TinDevApp:recruiter-login')
-
     return render(request, 'TinDevApp/recruiter_home.html', {'name':current_user})
 
 # Candidate's home page
@@ -93,10 +93,12 @@ def RecruiterCreateView(request):
     if request.method == 'POST':
         form = forms.RecruiterRegisterForm(request.POST)
         if form.is_valid():
+            # check if the username already exists
             new_username = form.cleaned_data.get('username')
             if Recruiter.objects.filter(username=new_username).count() > 0:
                 return HttpResponse('Username already exists.')
             else:
+                # save data and redirect to login
                 form.save()
                 return redirect('TinDevApp:candidate-login')
     else:
@@ -106,7 +108,6 @@ def RecruiterCreateView(request):
 
 
 # Creating/Editing/Deleting Posts # 
-
 class PostCreateView(CreateView):
     model = Post
     fields = ['recruiter_username', 'position', 'company','location', 'skills', 'description', 'expiration_date', 'pos_type', 'active']
@@ -117,7 +118,6 @@ class PostUpdateView(CreateView):
     template_name_suffix = '_update_form'
 
 # View Posts for Recruiter #
-
 def PostViewRecruiterAll(request, name):
     post_list = Post.objects.filter(recruiter_username=name)
     return render(request, 'TinDevApp/recruiter_view_post.html', {'list':post_list, 'name':name, 'active':'All'})

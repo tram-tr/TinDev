@@ -1,28 +1,16 @@
+{% extends "TinDevApp/base_home.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html>
+{% block title %}Recruiter's Homepage{% endblock %}
 
-<head>
-    <meta charset="utf-8">
-    <title>TinDev - Login</title>
-    <link rel="stylesheet" href="{% static 'style.css' %}">
-    <!-- Add Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-</head>
+{% block nav %} 
+    <nav class="nav">
+        <a href="{% url 'TinDevApp:recruiter-home' name %}" id="active">Home</a>
+        <a href="{% url 'TinDevApp:postAdd' name %}" id="inactive">Create a Post</a>
+		    <a href="{% url 'TinDevApp:postViewActive' name %}" id="inactive">View Current Posts</a>
+		    <a href="{% url 'TinDevApp:recruiter-login' %}" id="inactive">Logout</a>
+    </nav>
+{% endblock %}
 
-<body>
-    <p>Welcome to the home page {{name}}</p>
-	
-
-		<a href="{% url 'TinDevApp:postAdd' name %}" class="btn btn-primary" role="button">Create a Post</a>
-		<a href="{% url 'TinDevApp:postViewActive' name %}" class="btn btn-primary" role="button">View Current Posts</a>
-		<a href="{% url 'TinDevApp:recruiter-login' %}" class="btn btn-primary" role="button">Logout</a>
-
-    <!-- Import's Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"></script>
-</body>
-
-</html>
+{% block content %} 
+    <img src="{% static 'main.jpeg' %}" alt="home_page" style="width: 750px; max-width: 100%;">
+{% endblock %}
