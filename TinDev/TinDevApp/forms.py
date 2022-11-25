@@ -39,4 +39,11 @@ class LoginForm(forms.Form):
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['recruiter_username', 'position', 'location', 'company', 'skills', 'description', 'expiration_date', 'applicant_count', 'pos_type', 'active']
+        fields = ['position', 'location', 'company', 'skills', 'description', 'expiration_date', 'pos_type', 'active']
+        labels = {
+            'location:': 'Location (City, State)',
+            'skills': 'List of Skills',
+            'expiration_date': 'Expiration Date',
+            'pos_type': 'Position Type',
+            'active': 'Status',
+        }

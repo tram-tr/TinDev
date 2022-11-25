@@ -12,7 +12,7 @@ urlpatterns = [
     path('candidate/add/', views.CandidateCreateView, name='candidateAdd'),
     path('recruiter/add/', views.RecruiterCreateView, name='recruiterAdd'),
 
-    path('recruiter/home/<slug:name>/post/add', views.PostCreateView.as_view(), name = 'postAdd'),
+    path('recruiter/home/<slug:name>/post/add', views.PostCreate, name = 'postAdd'),
     path('recruiter/home/<slug:name>/post/view/all', views.PostViewRecruiterAll, name = 'postViewAll'),
     path('recruiter/home/<slug:name>/post/view/active', views.PostViewRecruiterActive, name = 'postViewActive'),
     path('recruiter/home/<slug:name>/post/view/inactive', views.PostViewRecruiterInactive, name = 'postViewInactive'),

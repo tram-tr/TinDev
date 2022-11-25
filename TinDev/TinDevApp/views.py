@@ -107,36 +107,32 @@ def RecruiterCreateView(request):
 
 
 # Creating/Editing/Deleting Posts # 
-class PostCreateView(CreateView):
-    model = Post
-    fields = ['recruiter_username', 'position', 'company','location', 'skills', 'description', 'expiration_date', 'pos_type', 'active']
 
-# View Posts for Recruiter #
-def PostViewRecruiterAll(request, name):
-    post_list = Post.objects.filter(recruiter_username=name)
-    return render(request, 'TinDevApp/recruiter_view_post.html', {'list':post_list, 'name':name, 'active':'All'})
+# Creating a New Post
+def PostCreate(request, name):
+    if request.method == 'POST':
+        form = forms.PostForm(request.POST)
+        if form.is_valid():
+            new_post = form.save(commit=False)
+            # Automatically update the current username before save form
+            new_post.recruiter_username = name
+            new_post.save()
+            # Redirect to View All Posts
+            return redirect(reverse('TinDevApp:postViewAll',kwargs={'name': name}))
+    else:
+        form = forms.PostForm()
+    return render(request, 'TinDevApp/post_form.html', {'form': form, 'name': name})
 
-def PostViewRecruiterActive(request, name):
-    post_list = Post.objects.filter(recruiter_username=name, active='A')
-    return render(request, 'TinDevApp/recruiter_view_post.html', {'list':post_list, 'name':name, 'active':'Active'})
-
-def PostViewRecruiterInactive(request, name):
-    post_list = Post.objects.filter(recruiter_username=name, active='I')
-    return render(request, 'TinDevApp/recruiter_view_post.html', {'list':post_list, 'name':name, 'active':'Inactive'})
-
-def PostViewRecruiterApplicant(request, name):
-    post_list = Post.objects.filter(recruiter_username=name)
-    post_list = [x for x in post_list if x.applicant_count > 0]
-    return render(request, 'TinDevApp/recruiter_view_post.html', {'list':post_list, 'name':name, 'active':'Applicant-Filled'})
-
+# Deleting a Post
 def PostDeleteRecruiter(request, name, id_num):
     post = Post.objects.filter(id=id_num)
     post.delete()
     application = Application.objects.filter(job_num=id_num)
     for element in application:
         element.delete()
-    return render(request, 'TinDevApp/recruiter_home.html', {'name':name} )
+    return redirect(reverse('TinDevApp:postViewAll',kwargs={'name': name}))
 
+# Update a Current Post
 def PostUpdateRecruiter(request, name, id_num):
     post = Post.objects.get(id=id_num, recruiter_username=name)
     if request.method == 'POST':
@@ -152,6 +148,30 @@ def PostUpdateRecruiter(request, name, id_num):
         'name': name
     }
     return render(request, 'TinDevApp/post_update.html', context)
+
+# View Posts for Recruiter #
+
+# View All Posts
+def PostViewRecruiterAll(request, name):
+    post_list = Post.objects.filter(recruiter_username=name)
+    return render(request, 'TinDevApp/recruiter_view_post.html', {'list':post_list, 'name':name, 'active':'All'})
+
+# View All Active Posts
+def PostViewRecruiterActive(request, name):
+    post_list = Post.objects.filter(recruiter_username=name, active='A')
+    return render(request, 'TinDevApp/recruiter_view_post.html', {'list':post_list, 'name':name, 'active':'Active'})
+
+# View All Inactive Posts
+def PostViewRecruiterInactive(request, name):
+    post_list = Post.objects.filter(recruiter_username=name, active='I')
+    return render(request, 'TinDevApp/recruiter_view_post.html', {'list':post_list, 'name':name, 'active':'Inactive'})
+
+# View All Jobs' Applicants
+def PostViewRecruiterApplicant(request, name):
+    post_list = Post.objects.filter(recruiter_username=name)
+    post_list = [x for x in post_list if x.applicant_count > 0]
+    return render(request, 'TinDevApp/recruiter_view_post.html', {'list':post_list, 'name':name, 'active':'Applicant-Filled'})
+
 
 # View Posts of Candidate #
 def PostViewCandidateAll(request, name):
