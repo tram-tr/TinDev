@@ -76,12 +76,10 @@ class Post(models.Model):
 
 class Application(models.Model):
     job_num = models.IntegerField()
-    job = models.ForeignKey(Post, related_name='applications', on_delete=models.CASCADE, default='')
+    job = models.ForeignKey(Post, related_name='applications', on_delete=models.CASCADE, null=True)
 
     candidate_username = models.CharField(max_length=30, default='')
-    candidate_name = models.CharField(max_length=30, default='')
-    candidate_year = models.IntegerField(default=0)
-    candidate_skill = models.CharField(max_length=500, default='')
+    candidate = models.ForeignKey(Candidate, related_name='applications', on_delete=models.CASCADE, null=True)
 
     
     APLY = 'APLY'
@@ -100,6 +98,30 @@ class Application(models.Model):
         choices=POSITION_TYPE_CHOICES,
         default=APLY,
     )
+
+    # calculate compatibility score
+    def compatibility_score(self):
+        score = 0
+
+        job_skills = [skill.lower() for skill in self.job.skills.split(',')]
+        candidate_skills = [skill.lower() for skill in self.candidate.skills.split(',')]
+
+        # if candidate has no skill return 0
+        if len(candidate_skills) == 0:
+            return 0
+
+        job_skills = set(job_skills)
+        candidate_skills = set(candidate_skills)
+
+        # score = percentage the overlap is if compared to the union of both lists + years of experience 
+        intersect = job_skills & candidate_skills
+        union = job_skills | candidate_skills
+        score = round(len(intersect) / len(union)) * 100
+        if score <= 90 and self.candidate.years > 3:
+            score += 10
+        if score > 100:
+            score = 100
+        return score
 
 class NotInterest(models.Model):
     job_num = models.IntegerField()

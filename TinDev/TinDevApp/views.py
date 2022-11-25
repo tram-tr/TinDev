@@ -167,10 +167,10 @@ def PostViewRecruiterInactive(request, name):
     return render(request, 'TinDevApp/recruiter_view_post.html', {'list':post_list, 'name':name, 'active':'Inactive'})
 
 # View All Jobs' Applicants
-def PostViewRecruiterApplicant(request, name):
-    post_list = Post.objects.filter(recruiter_username=name)
-    post_list = [x for x in post_list if x.applicant_count > 0]
-    return render(request, 'TinDevApp/recruiter_view_post.html', {'list':post_list, 'name':name, 'active':'Applicant-Filled'})
+def PostViewRecruiterApplicant(request, name, id_num):
+    applicants = Application.objects.filter(job__in=Post.objects.filter(recruiter_username=name, id=id_num))
+    post = Post.objects.get(id=id_num, recruiter_username=name)
+    return render(request, 'TinDevApp/recruiter_view_applicant.html', {'post': post, 'list': applicants})
 
 
 # View Posts of Candidate #
@@ -198,7 +198,7 @@ def PostViewCandidateInactive(request, name):
     application_list = Application.objects.filter(candidate_username=name).values_list('job_num',flat=True)
     post_list = list(Post.objects.filter(active='I'))
     applied_list = [x for x in post_list if x.id in application_list]
-    post_list = [x for x in post_list if x not in applied_list]
+    #post_list = [x for x in post_list if x not in applied_list]
     return render(request, 'TinDevApp/candidate_view_inactive_post.html', {'post_list':post_list, 'apply_list': applied_list, 'name':name, 'active':'Inactive'})
 
 # Search posts by description
@@ -212,7 +212,7 @@ def PostViewCandidateSearchDescription(request, name):
     )
 
     applied_list = [x for x in post_list if x.id in application_list]
-    post_list = [x for x in post_list if x not in applied_list]
+    #post_list = [x for x in post_list if x not in applied_list]
     return render(request, 'TinDevApp/candidate_view_post.html', {'post_list':post_list, 'apply_list': applied_list, 'name':name, 'active':'Description Searched'})
 
 # Search posts by zipcode
@@ -226,7 +226,7 @@ def PostViewCandidateSearchZipCode(request, name):
     )
 
     applied_list = [x for x in post_list if x.id in application_list]
-    post_list = [x for x in post_list if x not in applied_list]
+    #post_list = [x for x in post_list if x not in applied_list]
     return render(request, 'TinDevApp/candidate_view_post.html', {'post_list':post_list, 'apply_list': applied_list, 'name':name, 'active':'Zipcode Searched'})
 
 
@@ -241,8 +241,7 @@ def CandidateApply(request, name, id_num):
         post.applicant_count += 1
         post.save()
         application = Application(job_num=id_num, job = post, candidate_username=name, 
-                            candidate_name = candidate.name, candidate_year = candidate.years, 
-                            candidate_skill = candidate.skills, status='APLY')
+                            candidate = candidate, status='APLY')
         application.save()
 
     return render(request, 'TinDevApp/candidate_apply_post.html', {'name':name})

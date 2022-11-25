@@ -20,7 +20,6 @@
 				<a href="{% url 'TinDevApp:postViewAll' name=name %}" class="btn btn-primary" role="button">All Posts</a>
 				<a href="{% url 'TinDevApp:postViewActive' name=name %}" class="btn btn-primary" role="button">Active Posts</a>
 				<a href="{% url 'TinDevApp:postViewInactive' name=name %}" class="btn btn-primary" role="button">Inactive Posts</a>
-				<a href="{% url 'TinDevApp:postViewApplicant' name=name %}" class="btn btn-primary" role="button">Applicant-Filled Posts</a>
 				<a href="{% url 'TinDevApp:recruiter-home' name=name %}" class="btn btn-primary" role="button">Home</a>
 			</center>
 		</p>
@@ -50,6 +49,7 @@
 						<p> 
 								<a href="{% url 'TinDevApp:postDelete' name=name id_num=item.pk%}" class="btn btn-danger" role="button">Delete Post</a> 
 								<a href="{% url 'TinDevApp:postUpdate' name=name id_num=item.pk%}" class="btn btn-danger" role="button">Update Post</a> 
+								<a href="{% url 'TinDevApp:postViewApplicant' name=name id_num=item.pk %}" class="btn btn-primary" role="button">View Applicants</a>
 						</p>
 					</li>
 
