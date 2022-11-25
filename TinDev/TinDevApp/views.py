@@ -3,8 +3,7 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from TinDevApp.models import *
 from . import forms
 from django.shortcuts import redirect
-from django.db.models import F
-from django.db.models import Q
+from django.db.models import F, Q
 from django.http import HttpResponse
 
 
@@ -112,25 +111,24 @@ class PostCreateView(CreateView):
     model = Post
     fields = ['recruiter_username', 'position', 'company','location', 'skills', 'description', 'expiration_date', 'pos_type', 'active']
 
-class PostUpdateView(CreateView):
-    model = Post
-    fields = ['recruiter_username', 'position', 'location', 'skills', 'description', 'expiration_date', 'pos_type', 'active']
-    template_name_suffix = '_update_form'
-
 # View Posts for Recruiter #
 def PostViewRecruiterAll(request, name):
     post_list = Post.objects.filter(recruiter_username=name)
     return render(request, 'TinDevApp/recruiter_view_post.html', {'list':post_list, 'name':name, 'active':'All'})
+
 def PostViewRecruiterActive(request, name):
-    post_list = Post.objects.filter(recruiter_username=name,active='A')
+    post_list = Post.objects.filter(recruiter_username=name, active='A')
     return render(request, 'TinDevApp/recruiter_view_post.html', {'list':post_list, 'name':name, 'active':'Active'})
+
 def PostViewRecruiterInactive(request, name):
-    post_list = Post.objects.filter(recruiter_username=name,active='I')
+    post_list = Post.objects.filter(recruiter_username=name, active='I')
     return render(request, 'TinDevApp/recruiter_view_post.html', {'list':post_list, 'name':name, 'active':'Inactive'})
+
 def PostViewRecruiterApplicant(request, name):
-    post_list = list(Post.objects.all())
+    post_list = Post.objects.filter(recruiter_username=name)
     post_list = [x for x in post_list if x.applicant_count > 0]
     return render(request, 'TinDevApp/recruiter_view_post.html', {'list':post_list, 'name':name, 'active':'Applicant-Filled'})
+
 def PostDeleteRecruiter(request, name, id_num):
     post = Post.objects.filter(id=id_num)
     post.delete()
@@ -139,6 +137,21 @@ def PostDeleteRecruiter(request, name, id_num):
         element.delete()
     return render(request, 'TinDevApp/recruiter_home.html', {'name':name} )
 
+def PostUpdateRecruiter(request, name, id_num):
+    post = Post.objects.get(id=id_num, recruiter_username=name)
+    if request.method == 'POST':
+        form = forms.PostForm(request.POST, instance=post)
+        if form.is_valid():
+            form.save()
+            return redirect(reverse('TinDevApp:postViewAll',kwargs={'name': name}))
+    else:
+        form = forms.PostForm(instance=post)
+
+    context = {
+        'form': form,
+        'name': name
+    }
+    return render(request, 'TinDevApp/post_update.html', context)
 
 # View Posts of Candidate #
 def PostViewCandidateAll(request, name):

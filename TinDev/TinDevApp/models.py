@@ -1,6 +1,6 @@
 from django.db import models
 from django.urls import reverse
-
+import datetime
 
 # Candidate's Model
 class Candidate(models.Model):
@@ -38,7 +38,7 @@ class Post(models.Model):
     company = models.CharField(max_length=30)
     skills = models.CharField(max_length=500)
     description = models.CharField(max_length=500)
-    expiration_date = models.DateField()
+    expiration_date = models.DateField(default=datetime.date.today)
     applicant_count  = models.IntegerField(default=0)
 
     

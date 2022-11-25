@@ -17,7 +17,7 @@ urlpatterns = [
     path('recruiter/home/<slug:name>/post/view/active', views.PostViewRecruiterActive, name = 'postViewActive'),
     path('recruiter/home/<slug:name>/post/view/inactive', views.PostViewRecruiterInactive, name = 'postViewInactive'),
     path('recruiter/home/<slug:name>/post/view/applicant', views.PostViewRecruiterApplicant, name = 'postViewApplicant'),
-
+    path('recruiter/home/<slug:name>/post/update/<int:id_num>', views.PostUpdateRecruiter, name = 'postUpdate'),
     path('recruiter/home/<slug:name>/post/delete/<int:id_num>', views.PostDeleteRecruiter, name = 'postDelete'),
 
     path('candidate/home/<slug:name>/post/view/active', views.PostViewCandidateActive, name = 'CandidateViewActive'),

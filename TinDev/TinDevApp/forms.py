@@ -34,3 +34,9 @@ class RecruiterRegisterForm(forms.ModelForm):
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'placeholder': 'Username'}), label=False)
     password = forms.CharField(max_length=30, widget=forms.PasswordInput(attrs={'placeholder': 'Password'}), label=False)
+
+# Post Form
+class PostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ['recruiter_username', 'position', 'location', 'company', 'skills', 'description', 'expiration_date', 'applicant_count', 'pos_type', 'active']

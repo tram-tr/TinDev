@@ -39,9 +39,9 @@
 							{% endif %}
 
 							{% if item.pos_type == 'FULL' %}		
-								<h2> &emsp; Status: Full-Time</h2>
+								<h2> &emsp; Position Type: Full-Time</h2>
 							{% else %}
-								<h2> &emsp; Status: Part-Time</h2>
+								<h2> &emsp; Position Type: Part-Time</h2>
 							{% endif %}
 
 
@@ -49,6 +49,7 @@
 
 						<p> 
 								<a href="{% url 'TinDevApp:postDelete' name=name id_num=item.pk%}" class="btn btn-danger" role="button">Delete Post</a> 
+								<a href="{% url 'TinDevApp:postUpdate' name=name id_num=item.pk%}" class="btn btn-danger" role="button">Update Post</a> 
 						</p>
 					</li>
 
