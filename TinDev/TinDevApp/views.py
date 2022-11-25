@@ -4,7 +4,7 @@ from TinDevApp.models import *
 from . import forms
 from django.shortcuts import redirect
 from django.db.models import F, Q
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 
 
 def redirect_view(request, url):
@@ -174,28 +174,34 @@ def PostViewRecruiterApplicant(request, name):
 
 
 # View Posts of Candidate #
+
+# View All Posts (including Active, Inactive, Not Interested)
 def PostViewCandidateAll(request, name):
     application_list = list(Application.objects.filter(candidate_username=name).values_list('job_num',flat=True))
     post_list = list(Post.objects.all())
     applied_list = [x for x in post_list if x.id in application_list]
-    post_list = [x for x in post_list if x not in applied_list]
-
     return render(request, 'TinDevApp/candidate_view_post.html', {'post_list':post_list, 'apply_list': applied_list, 'name':name, 'active':'All'})
+
+# View Active Posts
 def PostViewCandidateActive(request, name):
+    # if candidate is not interested in the post, hide it
+    hide_list = NotInterest.objects.filter(candidate_username=name).values_list('job_num', flat=True)
     application_list = Application.objects.filter(candidate_username=name).values_list('job_num',flat=True)
     post_list = list(Post.objects.filter(active='A'))
     applied_list = [x for x in post_list if x.id in application_list]
-    post_list = [x for x in post_list if x not in applied_list]
+    post_list = [x for x in post_list if (x.id not in hide_list)]
+    return render(request, 'TinDevApp/candidate_view_active_post.html', {'post_list':post_list, 'apply_list': applied_list, 'name':name, 'active':'Active'})
 
-    return render(request, 'TinDevApp/candidate_view_post.html', {'post_list':post_list, 'apply_list': applied_list, 'name':name, 'active':'Active'})
-
+# View Inactive Posts
 def PostViewCandidateInactive(request, name):
+    # Candidate is still able to remove application
     application_list = Application.objects.filter(candidate_username=name).values_list('job_num',flat=True)
     post_list = list(Post.objects.filter(active='I'))
     applied_list = [x for x in post_list if x.id in application_list]
     post_list = [x for x in post_list if x not in applied_list]
-    return render(request, 'TinDevApp/candidate_view_post.html', {'post_list':post_list, 'apply_list': applied_list, 'name':name, 'active':'Inactive'})
+    return render(request, 'TinDevApp/candidate_view_inactive_post.html', {'post_list':post_list, 'apply_list': applied_list, 'name':name, 'active':'Inactive'})
 
+# Search posts by description
 def PostViewCandidateSearchDescription(request, name):
     application_list = Application.objects.filter(candidate_username=name).values_list('job_num',flat=True)
     post_list = list(Post.objects.all())
@@ -209,6 +215,7 @@ def PostViewCandidateSearchDescription(request, name):
     post_list = [x for x in post_list if x not in applied_list]
     return render(request, 'TinDevApp/candidate_view_post.html', {'post_list':post_list, 'apply_list': applied_list, 'name':name, 'active':'Description Searched'})
 
+# Search posts by zipcode
 def PostViewCandidateSearchZipCode(request, name):
     application_list = Application.objects.filter(candidate_username=name).values_list('job_num',flat=True)
     post_list = list(Post.objects.all())
@@ -226,38 +233,46 @@ def PostViewCandidateSearchZipCode(request, name):
 # Applications #
 
 #Application Add/Delete #
-
 def CandidateApply(request, name, id_num):
     apply = Application.objects.filter(candidate_username=name, job_num=id_num)
     if (len(apply) == 0):
-        candidate = Candidate.objects.filter(username=name)
-        post = Post.objects.filter(id=id_num)
-        post.update(applicant_count=F('applicant_count') + 1)
-
-
-        application = Application(job_num=id_num, candidate_name=candidate[0].name, candidate_username=name,status='APLY',job_title=post[0].position, job_company=post[0].company)
+        candidate = Candidate.objects.get(username=name)
+        post = Post.objects.get(id=id_num)
+        post.applicant_count += 1
+        post.save()
+        application = Application(job_num=id_num, job = post, candidate_username=name, 
+                            candidate_name = candidate.name, candidate_year = candidate.years, 
+                            candidate_skill = candidate.skills, status='APLY')
         application.save()
 
     return render(request, 'TinDevApp/candidate_apply_post.html', {'name':name})
 
+# Remove Application
 def CandidateRemoveApplication(request, name, id_num):
-    apply = Application.objects.filter(candidate_username=name, job_num=id_num)
-    apply[0].delete()
-    post = Post.objects.filter(id=id_num)
-    post.update(applicant_count=F('applicant_count') - 1)
-
-    return render(request, 'TinDevApp/candidate_apply_post.html', {'name':name})
+    apply = Application.objects.get(candidate_username=name, job_num=id_num)
+    apply.delete()
+    post = Post.objects.get(id=id_num)
+    post.applicant_count -= 1
+    post.save()
+    return render(request, 'TinDevApp/candidate_remove_apply.html', {'name':name})
 
 #Application View
-
 def CandidateViewApplication(request, name):
     apply = Application.objects.filter(candidate_username=name)
 
     return render(request, 'TinDevApp/candidate_view_applications.html', {'list':apply, 'name':name})
 
+# Not interested in the Post
+# Hide Post
+def CandidateHideActivePost(request, name, id_num):
+    dislike = NotInterest.objects.filter(candidate_username=name, job_num=id_num)
+    post = Post.objects.get(id=id_num)
+    if post.active == 'A':
+        hide = NotInterest(job_num=id_num, candidate_username=name)
+        hide.save()
 
-
-
+    return redirect(reverse('TinDevApp:CandidateViewActive',kwargs={'name': name}))
+    
 
 
 

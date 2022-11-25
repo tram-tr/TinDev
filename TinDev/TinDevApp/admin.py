@@ -6,3 +6,5 @@ admin.site.register(Candidate)
 admin.site.register(Recruiter)
 admin.site.register(Post)
 admin.site.register(Application)
+admin.site.register(NotInterest)
+

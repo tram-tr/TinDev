@@ -41,7 +41,6 @@ class Post(models.Model):
     expiration_date = models.DateField(default=datetime.date.today)
     applicant_count  = models.IntegerField(default=0)
 
-    
     FULL = 'FULL'
     PART = 'PART'
     POSITION_TYPE_CHOICES = [
@@ -77,12 +76,12 @@ class Post(models.Model):
 
 class Application(models.Model):
     job_num = models.IntegerField()
-    candidate_name = models.CharField(max_length=30)
-    candidate_username = models.CharField(max_length=30)
+    job = models.ForeignKey(Post, related_name='applications', on_delete=models.CASCADE, default='')
 
-    job_title = models.CharField(max_length=30)
-    job_company = models.CharField(max_length=30)
-
+    candidate_username = models.CharField(max_length=30, default='')
+    candidate_name = models.CharField(max_length=30, default='')
+    candidate_year = models.IntegerField(default=0)
+    candidate_skill = models.CharField(max_length=500, default='')
 
     
     APLY = 'APLY'
@@ -101,5 +100,9 @@ class Application(models.Model):
         choices=POSITION_TYPE_CHOICES,
         default=APLY,
     )
+
+class NotInterest(models.Model):
+    job_num = models.IntegerField()
+    candidate_username = models.CharField(max_length=30, default='')
 
 

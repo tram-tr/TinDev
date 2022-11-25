@@ -22,7 +22,7 @@
         {%for item in list%}
         <ul class="list-group">
                 <li class="list-group-item"> 
-                    <h1>{{item.job_title}} for {{item.job_company}}</h1>
+                    <h1>{{item.job.position}} for {{item.job.company}}</h1>
                     {% if item.status == 'APLY' %}
                         <h2 style="color:blue;">Status: Applied/Pending</h2>
                     {% elif item.status == 'REJT' %}

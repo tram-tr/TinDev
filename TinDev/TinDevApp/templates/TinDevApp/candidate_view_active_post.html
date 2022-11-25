@@ -54,6 +54,7 @@
 					  </p>
 						<p> 
 							<a href="{% url 'TinDevApp:CandidateApply' name=name id_num=item.pk %}" class="btn btn-danger" role="button">Apply</a> 
+							<a href="{% url 'TinDevApp:CandidateHide' name=name id_num=item.pk %}" class="btn btn-danger" role="button">Not Interested</a> 
 						</p>
 					</li>
 			</ul>		
