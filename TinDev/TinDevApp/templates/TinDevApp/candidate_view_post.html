@@ -35,7 +35,7 @@
 		{%for item in post_list%}
 			<ul class="list-group">
 					<li class="list-group-item"> 
-						<h1>Position: {{item.position}} </pre><span class="w3-badge w3-green"></pre>{{item.applicant_count}} </span> </h1>
+						<h1>Position: {{item.position}} <span class="badge bg-primary rounded-pill">{{item.applicant_count}} </span> </h1>
 						<p> 
 							<h2> &emsp; Description: {{item.description}}</h2>
 							<h2> &emsp; Company: {{item.company}}</h2>
@@ -63,7 +63,7 @@
 		   <ul class="list-group">
 				   <li class="list-group-item">
 						<h1>Position: {{item.position}} 
-							<span class="w3-badge w3-green"> {{item.applicant_count}} </span> 
+							<span class="badge bg-primary rounded-pill"> {{item.applicant_count}} </span> 
 						</h1>
 					   <p> 
 						   <h2> &emsp; Company: {{item.company}}</h2>

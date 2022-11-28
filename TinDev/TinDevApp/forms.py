@@ -41,9 +41,18 @@ class PostForm(forms.ModelForm):
         model = Post
         fields = ['position', 'location', 'company', 'skills', 'description', 'expiration_date', 'pos_type', 'active']
         labels = {
-            'location:': 'Location (City, State)',
+            'location': 'Location (City, State)',
             'skills': 'List of Skills',
-            'expiration_date': 'Expiration Date',
+            'expiration_date': 'Expiration Date (mm/dd/yyyy)',
             'pos_type': 'Position Type',
             'active': 'Status',
         }
+
+class Offer(forms.ModelForm):
+    class Meta:
+            model = Offer
+            fields = ['yearly_salary', 'expiration_date']
+            labels = {
+                'yearly_salary': 'Yearly Salary',
+                'expiration_date': 'Expiration Date (mm/dd/yyyy)'
+            }

@@ -26,6 +26,17 @@
 							<h2> &emsp; Years: {{app.candidate.years}}</h2>
 							<h2> &emsp; Skills: {{app.candidate.skills}}</h2>
                             <h2> &emsp; Compatibility Scores: {{app.compatibility_score}}%</h2>
+							{% if app.status == 'APLY' %}
+                        		<h2 style="color:blue;"> &emsp; Status: Applied/Pending</h2>
+                    		{% elif app.status == 'REJT' %}
+                        		<h2 style="color:red;"> &emsp; Status: Rejected</h2>
+                    		{% elif app.status == 'ACCT' %}
+                        		<h2 style="color:green;"> &emsp; Status: Accepted</h2>
+                    		{% elif app.status == 'EXND' %}
+                        		<h2 style="color:orange;"> &emsp; Status: Offer Extended </h2>
+                    		{% endif %}
+							<a href="{% url 'TinDevApp:CandidateReject' name=name id_num=id_num app_id=app.id%}" class="btn btn-danger" role="button">Remove Application</a> 
+							
 					  </p>
 					</li>
 			</ul>		
@@ -37,10 +48,13 @@
 					<h4 class="card-title"><u>Extend Offer</u></h4>
 					<form method="post">{% csrf_token %}
 						{%for app in list%}
-						<input type="checkbox" value="{{app.id}}" name="applicant_{{app.id}}" id="app_{{app.id}}">
-						<label for="{{app.candidate.name}}">{{app.candidate.name}}</label>
-						<br>
-						{% endfor %}    
+							{% if app.status == "APLY"%}
+								<input type="checkbox" value="{{app.id}}" name="applicant_{{app.id}}" id="app_{{app.id}}">
+								<label for="{{app.candidate.name}}">{{app.candidate.name}}</label>
+								<br>
+							{% endif %}
+						{% endfor %}
+						{{form.as_p}}
 						<br>
 						<input type="submit" value="Save" class="btn btn-light">
 					</form>

@@ -5,6 +5,7 @@ from . import forms
 from django.shortcuts import redirect
 from django.db.models import F, Q
 from django.http import HttpResponse, HttpResponseRedirect
+from datetime import date
 
 
 def redirect_view(request, url):
@@ -15,6 +16,21 @@ def redirect_view(request, url):
 def candidateLoginPage(request):
     form = forms.LoginForm()
     message = ''
+
+    curr_date = date.today()
+    for post in Post.objects.all():
+        if post.expiration_date <= curr_date:
+            post.active = 'I'
+            post.save()
+
+    for offer in Offer.objects.all():
+        if offer.expiration_date <= curr_date:
+            app = offer.app_id
+            if app and app.status == 'EXND':
+                app.status = 'REJT'
+                app.save()
+                offer.delete()
+
     if request.method == 'POST':
         form = forms.LoginForm(request.POST)
         if form.is_valid():
@@ -34,6 +50,24 @@ def candidateLoginPage(request):
 def recruiterLoginPage(request):
     form = forms.LoginForm()
     message = ''
+    curr_date = date.today()
+
+    for post in Post.objects.all():
+        if post.expiration_date <= curr_date:
+            for application in Application.objects.filter(job=post):
+                application.status = 'REJT'
+                application.save()
+            post.active = 'I'
+            post.save()
+
+    for offer in Offer.objects.all():
+        if offer.expiration_date <= curr_date:
+            app = offer.app_id
+            if app and app.status == 'EXND':
+                app.status = 'REJT'
+                app.save()
+                offer.delete()
+
     if request.method == 'POST':
         form = forms.LoginForm(request.POST)
         if form.is_valid():
@@ -168,16 +202,32 @@ def PostViewRecruiterInactive(request, name):
 
 # View All Jobs' Applicants
 def PostViewRecruiterApplicant(request, name, id_num):
+    form = forms.Offer()
     applicants = Application.objects.filter(job__in=Post.objects.filter(recruiter_username=name, id=id_num))
     post = Post.objects.get(id=id_num, recruiter_username=name)
     if request.method == 'POST':
-        for k, v in request.POST.items():
-            if 'applicant_' in k:
-                app_id = v
-                Application.objects.filter(id=app_id).update(status="EXND")
+        form = forms.Offer(request.POST)
+        if form:
+            for k, v in request.POST.items():
+                if 'applicant_' in k:
+                    app_id = v
+                    curr_app = Application.objects.get(id=app_id)
+                    Application.objects.filter(id=app_id).update(status="EXND")
+                    if form.is_valid():
+                        new_offer = form.save(commit=False)
+                        new_offer.app_id = curr_app
+                        new_offer.save()
+        elif rej_app := request.POST.get('reject'):
+            rej_app.status = 'REJT'
+            rej_app.save()
+                
+    return render(request, 'TinDevApp/recruiter_view_applicant.html', {'post': post, 'list': applicants, 'form':form, 'name':name, 'id_num':id_num })
 
-    return render(request, 'TinDevApp/recruiter_view_applicant.html', {'post': post, 'list': applicants})
-
+def CandidateReject(request, name, id_num, app_id):
+    app =  Application.objects.get(id=app_id)
+    app.status = 'REJT'
+    app.save()
+    return render(request, 'TinDevApp/candidate_reject.html', {'name':name, 'id_num':id_num})
 
 # View Posts of Candidate #
 
@@ -195,7 +245,7 @@ def PostViewCandidateActive(request, name):
     application_list = Application.objects.filter(candidate_username=name).values_list('job_num',flat=True)
     post_list = list(Post.objects.filter(active='A'))
     applied_list = [x for x in post_list if x.id in application_list]
-    post_list = [x for x in post_list if (x.id not in hide_list)]
+    post_list = [x for x in post_list if (x.id not in hide_list and x.id not in application_list)]
     return render(request, 'TinDevApp/candidate_view_active_post.html', {'post_list':post_list, 'apply_list': applied_list, 'name':name, 'active':'Active'})
 
 # View Inactive Posts
@@ -255,6 +305,8 @@ def CandidateApply(request, name, id_num):
 # Remove Application
 def CandidateRemoveApplication(request, name, id_num):
     apply = Application.objects.get(candidate_username=name, job_num=id_num)
+    for offer in Offer.objects.filter(app_id=apply.id):
+        offer.delete()
     apply.delete()
     post = Post.objects.get(id=id_num)
     post.applicant_count -= 1

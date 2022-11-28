@@ -127,4 +127,8 @@ class NotInterest(models.Model):
     job_num = models.IntegerField()
     candidate_username = models.CharField(max_length=30, default='')
 
+class Offer(models.Model):
+    app_id = models.ForeignKey(Application, related_name='offers', on_delete=models.CASCADE, null=True)
+    yearly_salary = models.IntegerField()
+    expiration_date = models.DateField()
 
