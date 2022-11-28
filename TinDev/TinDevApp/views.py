@@ -170,6 +170,12 @@ def PostViewRecruiterInactive(request, name):
 def PostViewRecruiterApplicant(request, name, id_num):
     applicants = Application.objects.filter(job__in=Post.objects.filter(recruiter_username=name, id=id_num))
     post = Post.objects.get(id=id_num, recruiter_username=name)
+    if request.method == 'POST':
+        for k, v in request.POST.items():
+            if 'applicant_' in k:
+                app_id = v
+                Application.objects.filter(id=app_id).update(status="EXND")
+
     return render(request, 'TinDevApp/recruiter_view_applicant.html', {'post': post, 'list': applicants})
 
 
