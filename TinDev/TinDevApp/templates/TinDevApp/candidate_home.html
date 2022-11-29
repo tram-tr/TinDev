@@ -1,15 +1,15 @@
-{% extends "TinDevApp/base_home.html" %}
+{% extends "TinDevApp/base/base_home.html" %}
 {% load static %}
 {% block title %}Candidate's Homepage{% endblock %}
 
 {% block nav %} 
-    <nav class="nav">
-        <a href="{% url 'TinDevApp:candidate-home' name %}" id="active">Home</a>
-        <a href="{% url 'TinDevApp:CandidateViewActive' name %}" id="inactive">Jobs Board</a>
-        <a href="{% url 'TinDevApp:ApplicationView' name %}" id="inactive">Applications</a>
-        <a href="{% url 'TinDevApp:OfferView' name %}" id="inactive">Offers</a>
-        <a href="{% url 'TinDevApp:candidate-login' %}" id="inactive">Logout</a>
-    </nav>
+<nav class="navbar primary">
+    <a class="nav-item active" href="{% url 'TinDevApp:candidate-home' name %}">Home</a>
+    <a class="nav-item" href="{% url 'TinDevApp:CandidateViewActive' name %}">Job Board</a>
+    <a class="nav-item" href="{% url 'TinDevApp:ApplicationView' name %}">Applications</a>
+    <a class="nav-item" href="{% url 'TinDevApp:OfferView' name %}">Offers</a>
+    <a class="nav-item" href="{% url 'TinDevApp:candidate-login' %}">Logout</a>
+</nav>
 {% endblock %}
 
 {% block content %} 

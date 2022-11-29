@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<div class="form-group">
+   {%for item in post_list%}
+       <ul class="list-group">
+               <li class="list-group-item">
+                   <h1>Position: {{item.position}} </pre><span id="badge" class="badge bg-primary rounded-pill"></pre>{{item.applicant_count}} </span> </h1>
+                   <p>
+                       <h2> &emsp; Description: {{item.description}}</h2>
+                       <h2> &emsp; Company: {{item.company}}</h2>
+                       <h2> &emsp; Skills: {{item.skills}}</h2>
+                       {% if item.active == 'A' %}    
+                           <h2> &emsp; Status: Active</h2>
+                       {% else %}
+                           <h2> &emsp; Status: Inactive</h2>
+                       {% endif %}
+ 
+                       {% if item.pos_type == 'FULL' %}       
+                           <h2> &emsp; Position Type: Full-Time</h2>
+                       {% else %}
+                           <h2> &emsp; Position Type: Part-Time</h2>
+                       {% endif %}
+                 </p>
+                 {% block button %}
+                 <p>
+                     <a href="{% url 'TinDevApp:CandidateApply' name=name id_num=item.pk %}" class="btn btn-danger" role="button">Apply</a>
+                     <a href="{% url 'TinDevApp:CandidateHide' name=name id_num=item.pk %}" class="btn btn-danger" role="button">Not Interested</a>
+                 </p>
+                 {% endblock %}
+               </li>
+       </ul>      
+   {% endfor %}
+</div>
+
+<div class="form-group">
+   {%for item in apply_list%}
+      <ul class="list-group">
+              <li class="list-group-item">
+                   <h1>Position: {{item.position}}
+                       <span class="badge bg-primary rounded-pill"> {{item.applicant_count}} </span>
+                   </h1>
+                  <p>
+                      <h2> &emsp; Company: {{item.company}}</h2>
+                      <h2> &emsp; Skills: {{item.skills}}</h2>
+                      {% if item.active == 'A' %}     
+                          <h2> &emsp; Status: Active</h2>
+                      {% else %}
+                          <h2> &emsp; Status: Inactive</h2>
+                      {% endif %}
+ 
+                      {% if item.pos_type == 'FULL' %}    
+                          <h2> &emsp; Position Type: Full-Time</h2>
+                      {% else %}
+                          <h2> &emsp; Position Type: Part-Time</h2>
+                      {% endif %}
+                    </p>
+                  <p>
+                      <a href="{% url 'TinDevApp:CandidateUnapply' name=name id_num=item.pk %}" class="btn btn-danger" role="button">Remove Application</a>
+                  </p>
+ 
+              </li>
+      </ul>       
+      {% endfor %} 
+</div>
+</html>
