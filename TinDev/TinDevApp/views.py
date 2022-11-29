@@ -319,6 +319,11 @@ def CandidateViewApplication(request, name):
 
     return render(request, 'TinDevApp/candidate_view_applications.html', {'list':apply, 'name':name})
 
+def CandidateViewOffer(request, name):
+    apply = Application.objects.filter(candidate_username=name)
+
+    return render(request, 'TinDevApp/candidate_view_offer.html', {'list':apply, 'name':name})
+
 # Not interested in the Post
 # Hide Post
 def CandidateHideActivePost(request, name, id_num):

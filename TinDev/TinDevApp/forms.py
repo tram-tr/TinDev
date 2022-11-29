@@ -43,7 +43,7 @@ class PostForm(forms.ModelForm):
         labels = {
             'location': 'Location (City, State)',
             'skills': 'List of Skills',
-            'expiration_date': 'Expiration Date (mm/dd/yyyy)',
+            'expiration_date': 'Expiration Date (yyyy/mm/dd)',
             'pos_type': 'Position Type',
             'active': 'Status',
         }
@@ -54,5 +54,6 @@ class Offer(forms.ModelForm):
             fields = ['yearly_salary', 'expiration_date']
             labels = {
                 'yearly_salary': 'Yearly Salary',
-                'expiration_date': 'Expiration Date (mm/dd/yyyy)'
+                'expiration_date': 'Expiration Date (yyyy/mm/dd)'
             }
+            

@@ -7,7 +7,7 @@
         <a href="{% url 'TinDevApp:candidate-home' name %}" id="active">Home</a>
         <a href="{% url 'TinDevApp:CandidateViewActive' name %}" id="inactive">Jobs Board</a>
         <a href="{% url 'TinDevApp:ApplicationView' name %}" id="inactive">Applications</a>
-        <a href="#" id="inactive">Offers</a>
+        <a href="{% url 'TinDevApp:OfferView' name %}" id="inactive">Offers</a>
         <a href="{% url 'TinDevApp:candidate-login' %}" id="inactive">Logout</a>
     </nav>
 {% endblock %}

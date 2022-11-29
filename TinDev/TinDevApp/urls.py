@@ -33,6 +33,8 @@ urlpatterns = [
     path('candidate/home/<slug:name>/post/<int:id_num>/unapply', views.CandidateRemoveApplication, name = 'CandidateUnapply'),
     path('candidate/home/<slug:name>/post/<int:id_num>/hide', views.CandidateHideActivePost, name = 'CandidateHide'),
 
+    path('candidate/home/<slug:name>/offer/view', views.CandidateViewOffer,name='OfferView'),
+
     path('candidate/home/<slug:name>/application/view', views.CandidateViewApplication, name = 'ApplicationView'),
    
     
