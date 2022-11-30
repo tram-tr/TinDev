@@ -27,9 +27,9 @@ def candidateLoginPage(request):
         if offer.expiration_date <= curr_date:
             app = offer.app_id
             if app and app.status == 'EXND':
-                app.status = 'REJT'
+                app.status = 'EXPR'
+                app.offer_expire = offer.expiration_date
                 app.save()
-                offer.delete()
 
     if request.method == 'POST':
         form = forms.LoginForm(request.POST)
@@ -64,9 +64,10 @@ def recruiterLoginPage(request):
         if offer.expiration_date <= curr_date:
             app = offer.app_id
             if app and app.status == 'EXND':
-                app.status = 'REJT'
+                app.status = 'EXPR'
+                app.offer_expire = offer.expiration_date
                 app.save()
-                offer.delete()
+
 
     if request.method == 'POST':
         form = forms.LoginForm(request.POST)
@@ -351,9 +352,21 @@ def CandidateViewApplication(request, name):
     return render(request, 'TinDevApp/candidate_view_applications.html', {'list':apply, 'name':name})
 
 def CandidateViewOffer(request, name):
-    apply = Application.objects.filter(candidate_username=name)
+    curr_date = date.today()
 
-    return render(request, 'TinDevApp/candidate_view_offer.html', {'list':apply, 'name':name})
+    for offer in Offer.objects.all():
+        if offer.expiration_date <= curr_date:
+            app = offer.app_id
+            if app and app.status == 'EXND':
+                app.status = 'EXPR'
+                app.offer_expire = offer.expiration_date
+                app.save()
+    
+
+    apply = Application.objects.filter(candidate_username=name)
+    offers = Offer.objects.filter(app_id__in = Application.objects.filter(candidate_username=name))
+
+    return render(request, 'TinDevApp/candidate_view_offer.html', {'list':apply, 'name':name, 'offers':offers})
 
 # Not interested in the Post
 # Hide Post

@@ -20,16 +20,25 @@
 			</center>
         </p>
 
-        {%for app in list%}
-            {% if app.status == 'EXND' %}
+        {%for offer in offers%}
+            {% if offer.app_id.status == 'EXND' %}
             <ul class="list-group">
                     <li class="list-group-item"> 
-                        <h1>{{app.job.position}} for {{app.job.company}}</h1>
+                        <h1>{{offer.app_id.job.position}} for {{offer.app_id.job.company}}</h1>
                         <h2 style="color:orange;">Status: Offer Extended </h2>
+                        <h2>Salary: ${{offer.yearly_salary}}</h2>
+                        <h2>Expiration Date: {{offer.expiration_date}}</h2>
                     </li>
             </ul>   
-            <a href="{% url 'TinDevApp:CandidateOfferReject' name=name id_num=app.id %}" class="btn btn-danger" role="button">Reject Offer</a>
-            <a href="{% url 'TinDevApp:CandidateOfferAccept' name=name id_num=app.id %}" class="btn btn-danger" role="button">Accept Offer</a> 
+            <a href="{% url 'TinDevApp:CandidateOfferReject' name=name id_num=offer.app_id.id %}" class="btn btn-danger" role="button">Reject Offer</a>
+            <a href="{% url 'TinDevApp:CandidateOfferAccept' name=name id_num=offer.app_id.id %}" class="btn btn-danger" role="button">Accept Offer</a> 
+            {% elif offer.app_id.status == 'EXPR' %}
+            <ul class="list-group">
+                <li class="list-group-item"> 
+                    <h1>{{offer.app_id.job.position}} for {{offer.app_id.job.company}}</h1>
+                    <h2 style="color:red;">Status: Offer Expired on {{offer.expiration_date}}</h2>
+                </li>
+            </ul>   
             {% endif %}
         {% endfor %}
 

@@ -34,6 +34,8 @@
                         		<h2 style="color:green;"> &emsp; Status: Accepted</h2>
                     		{% elif app.status == 'EXND' %}
                         		<h2 style="color:orange;"> &emsp; Status: Offer Extended </h2>
+							{% elif app.status == 'EXPR' %} 
+								<h2 style="color:red;"> &emsp; Status: Offer Expired on {{app.offer_expire}}</h2>
                     		{% endif %}
 							<a href="{% url 'TinDevApp:CandidateReject' name=name id_num=id_num app_id=app.id%}" class="btn btn-danger" role="button">Remove Application</a> 
 							

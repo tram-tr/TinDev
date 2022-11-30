@@ -80,17 +80,19 @@ class Application(models.Model):
 
     candidate_username = models.CharField(max_length=30, default='')
     candidate = models.ForeignKey(Candidate, related_name='applications', on_delete=models.CASCADE, null=True)
-
     
+    offer_expire = models.DateField(default=datetime.date.today)
     APLY = 'APLY'
     REJT = 'REJT'
     ACCT = 'ACCT'
     EXND = 'EXND'
+    EXPR = 'EXPR'
     POSITION_TYPE_CHOICES = [
         (APLY, 'Applied/Pending'),
         (REJT, 'Rejected'),
         (ACCT, 'Accepted'),
         (EXND, 'Offer Extended'),
+        (EXPR, 'Expired')
     ]
 
     status = models.CharField(

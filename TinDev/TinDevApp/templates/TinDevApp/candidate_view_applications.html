@@ -31,6 +31,8 @@
                         <h2 style="color:green;">Status: Accepted</h2>
                     {% elif item.status == 'EXND' %}
                         <h2 style="color:orange;">Status: Offer Extended </h2>
+                    {% elif item.status == 'EXPR' %} 
+                        <h2 style="color:red;"> &emsp; Status: Offer Expired on {{item.offer_expire}}</h2>
                     {% endif %}
                 </li>
         </ul>		
