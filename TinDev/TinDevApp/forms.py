@@ -54,6 +54,9 @@ class Offer(forms.ModelForm):
             fields = ['yearly_salary', 'expiration_date']
             labels = {
                 'yearly_salary': 'Yearly Salary',
-                'expiration_date': 'Expiration Date (yyyy/mm/dd)'
+            }
+
+            widgets = {
+                'expiration_date': forms.DateInput(attrs={'placeholder': 'Expiration Date'})
             }
             

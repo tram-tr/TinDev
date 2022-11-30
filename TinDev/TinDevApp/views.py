@@ -103,6 +103,20 @@ def CandidatePage(request, name):
         return redirect('TinDevApp:candidate-login')
     return render(request, 'TinDevApp/candidate_home.html', {'name': current_user})
 
+def CandidateOfferReject(request, name,id_num):
+    app = Application.objects.get(id=id_num)
+
+    for offer in Offer.objects.filter(app_id=app.id): # delete offer
+        offer.delete()
+    
+
+
+    app.delete() # delete application
+
+    # decrement post (????????????????)
+
+
+    return render(request, 'TinDevApp/candidate_offer_reject.html', {'name:': name, 'app_id': app_id})
 # Candidate's register page
 def CandidateCreateView(request):
     if request.method == 'POST':

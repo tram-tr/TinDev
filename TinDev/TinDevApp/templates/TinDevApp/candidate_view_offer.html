@@ -20,14 +20,15 @@
 			</center>
         </p>
 
-        {%for item in list%}
-            {% if item.status == 'EXND' %}
+        {%for app in list%}
+            {% if app.status == 'EXND' %}
             <ul class="list-group">
                     <li class="list-group-item"> 
-                        <h1>{{item.job.position}} for {{item.job.company}}</h1>
+                        <h1>{{app.job.position}} for {{app.job.company}}</h1>
                         <h2 style="color:orange;">Status: Offer Extended </h2>
                     </li>
-            </ul>
+            </ul>   
+            <a href="{% url 'TinDevApp:CandidateOfferReject' name=name app_id=app.id%}" class="btn btn-danger" role="button">Reject Offer</a> 
             {% endif %}
         {% endfor %}
 
