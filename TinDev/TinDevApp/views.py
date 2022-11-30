@@ -106,17 +106,34 @@ def CandidatePage(request, name):
 def CandidateOfferReject(request, name,id_num):
     app = Application.objects.get(id=id_num)
 
-    for offer in Offer.objects.filter(app_id=app.id): # delete offer
+    for offer in Offer.objects.filter(app_id = app.id): # delete offer
         offer.delete()
-    
 
+    # decrement post
+    post = Post.objects.get(id=app.job.id)
+
+    post.applicant_count -= 1
+    post.save()
 
     app.delete() # delete application
 
-    # decrement post (????????????????)
+    return redirect(reverse('TinDevApp:OfferView',kwargs={'name':name}))
 
+def CandidateOfferAccept(request, name, id_num):
+    app = Application.objects.get(id=id_num)
 
-    return render(request, 'TinDevApp/candidate_offer_reject.html', {'name:': name, 'app_id': app_id})
+    for offer in Offer.objects.filter(app_id=app.id):
+        offer.delete()
+    
+    post = Post.objects.get(id=app.job.id)
+    
+    app.status = 'ACCT'
+    app.save()
+
+    return redirect(reverse('TinDevApp:OfferView',kwargs={'name':name}))
+
+    
+    
 # Candidate's register page
 def CandidateCreateView(request):
     if request.method == 'POST':

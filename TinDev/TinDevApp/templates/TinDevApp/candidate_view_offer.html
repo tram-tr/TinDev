@@ -28,7 +28,8 @@
                         <h2 style="color:orange;">Status: Offer Extended </h2>
                     </li>
             </ul>   
-            <a href="{% url 'TinDevApp:CandidateOfferReject' name=name app_id=app.id%}" class="btn btn-danger" role="button">Reject Offer</a> 
+            <a href="{% url 'TinDevApp:CandidateOfferReject' name=name id_num=app.id %}" class="btn btn-danger" role="button">Reject Offer</a>
+            <a href="{% url 'TinDevApp:CandidateOfferAccept' name=name id_num=app.id %}" class="btn btn-danger" role="button">Accept Offer</a> 
             {% endif %}
         {% endfor %}
 
