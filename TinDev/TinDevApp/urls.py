@@ -8,6 +8,8 @@ urlpatterns = [
 
     path('recruiter/home/<slug:name>', views.RecruiterPage, name='recruiter-home'),
     path('candidate/home/<slug:name>', views.CandidatePage, name='candidate-home'),
+    path('recruiter/home/<slug:name>/profile/update', views.RecruiterProfileUpdate, name='RecruiterProfile'),
+    path('candidate/home/<slug:name>/profile/update', views.CandidateProfileUpdate, name='CandidateProfile'),
 
     path('candidate/add/', views.CandidateCreateView, name='candidateAdd'),
     path('recruiter/add/', views.RecruiterCreateView, name='recruiterAdd'),

@@ -22,7 +22,7 @@ class Recruiter(models.Model):
     name = models.CharField(max_length=30)
     company = models.CharField(max_length=30)
     zipcode  = models.IntegerField()
-    username = models.CharField(max_length = 30)
+    username = models.CharField(max_length = 30, unique=True)
     password = models.CharField(max_length=30)
 
     def __str__ (self):

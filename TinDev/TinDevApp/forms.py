@@ -35,6 +35,29 @@ class LoginForm(forms.Form):
     username = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'placeholder': 'Username'}), label=False)
     password = forms.CharField(max_length=30, widget=forms.PasswordInput(attrs={'placeholder': 'Password'}), label=False)
 
+# New Candidate Form
+class CandidateProfileForm(forms.ModelForm):
+    class Meta:
+        model = Candidate
+        fields = ['name', 'zipcode', 'skills', 'years']
+        labels = {
+            'name': 'Full Name',
+            'zipcode' : 'Zip Code',
+            'skills': 'List of Skills',
+            'years' : 'Years of Experience',
+        }
+
+# New Recruiter Form
+class RecruiterProfileForm(forms.ModelForm):
+    class Meta:
+        model = Recruiter
+        fields = ['name', 'company', 'zipcode']
+        labels = {
+            'name': 'Full Name',
+            'company': 'Company',
+            'zipcode' : 'Zip Code',
+        }
+
 # Post Form
 class PostForm(forms.ModelForm):
     class Meta:

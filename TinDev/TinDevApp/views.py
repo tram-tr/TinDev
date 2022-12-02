@@ -28,7 +28,7 @@ def CandidateCreateView(request):
     else:
         form = forms.CandidateRegisterForm()
 
-    return render(request, 'TinDevApp/register_form.html', context={'form': form, 'register': 'candidate'})
+    return render(request, 'TinDevApp/register_form.html', context={'form': form, 'register': 'candidate', 'user': False})
 
 # Recruiter's register page
 def RecruiterCreateView(request):
@@ -42,11 +42,11 @@ def RecruiterCreateView(request):
             else:
                 # save data and redirect to login
                 form.save()
-                return redirect('TinDevApp:candidate-login')
+                return redirect('TinDevApp:recruiter-login')
     else:
         form = forms.RecruiterRegisterForm()
     
-    return render(request, 'TinDevApp/register_form.html', context={'form': form, 'register': 'recruiter'})
+    return render(request, 'TinDevApp/register_form.html', context={'form': form, 'register': 'recruiter', 'user': False})
 
 # Candidate's login page
 def candidateLoginPage(request):
@@ -140,34 +140,29 @@ def CandidatePage(request, name):
         return redirect('TinDevApp:candidate-login')
     return render(request, 'TinDevApp/candidate_home.html', {'name': current_user})
 
-def CandidateOfferReject(request, name,id_num):
-    app = Application.objects.get(id=id_num)
+# Recruiter Update Profile
+def RecruiterProfileUpdate(request, name):
+    profile = Recruiter.objects.get(username=name)
+    if request.method == 'POST':
+        form = forms.RecruiterProfileForm(request.POST, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect(reverse('TinDevApp:recruiter-home', kwargs={'name': name}))
+    else:
+        form = forms.RecruiterProfileForm(instance=profile)
+    return render(request, 'TinDevApp/register_form.html', {'form': form, 'name': name, 'user': True})
 
-    for offer in Offer.objects.filter(app_id = app.id): # delete offer
-        offer.delete()
-
-    # decrement post
-    post = Post.objects.get(id=app.job.id)
-
-    post.applicant_count -= 1
-    post.save()
-
-    app.delete() # delete application
-
-    return redirect(reverse('TinDevApp:OfferView',kwargs={'name':name}))
-
-def CandidateOfferAccept(request, name, id_num):
-    app = Application.objects.get(id=id_num)
-
-    for offer in Offer.objects.filter(app_id=app.id):
-        offer.delete()
-    
-    post = Post.objects.get(id=app.job.id)
-    
-    app.status = 'ACCT'
-    app.save()
-
-    return redirect(reverse('TinDevApp:OfferView',kwargs={'name':name}))
+# Candidate Update Profile
+def CandidateProfileUpdate(request, name):
+    profile = Candidate.objects.get(username=name)
+    if request.method == 'POST':
+        form = forms.CandidateProfileForm(request.POST, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect(reverse('TinDevApp:candidate-home', kwargs={'name': name}))
+    else:
+        form = forms.CandidateProfileForm(instance=profile)
+    return render(request, 'TinDevApp/register_form.html', {'form': form, 'name': name, 'user': True})
 
 # Creating/Editing/Deleting Posts # 
 
@@ -367,8 +362,8 @@ def CandidateViewOffer(request, name):
 
     return render(request, 'TinDevApp/candidate_view_offer.html', {'list':apply, 'name':name, 'offers':offers})
 
-# Not interested in the Post
-# Hide Post
+# Candidate Not interested in the Post
+# Hide Post in Active Post
 def CandidateHideActivePost(request, name, id_num):
     dislike = NotInterest.objects.filter(candidate_username=name, job_num=id_num)
     post = Post.objects.get(id=id_num)
@@ -377,10 +372,37 @@ def CandidateHideActivePost(request, name, id_num):
         hide.save()
 
     return redirect(reverse('TinDevApp:CandidateViewActive',kwargs={'name': name}))
+
+# Candidate Reject Offer
+def CandidateOfferReject(request, name,id_num):
+    app = Application.objects.get(id=id_num)
+
+    for offer in Offer.objects.filter(app_id = app.id): # delete offer
+        offer.delete()
+
+    # decrement post
+    post = Post.objects.get(id=app.job.id)
+
+    post.applicant_count -= 1
+    post.save()
+
+    app.delete() # delete application
+
+    return redirect(reverse('TinDevApp:OfferView',kwargs={'name':name}))
+
+# Candidate Accept Offer
+def CandidateOfferAccept(request, name, id_num):
+    app = Application.objects.get(id=id_num)
+
+    for offer in Offer.objects.filter(app_id=app.id):
+        offer.delete()
     
+    post = Post.objects.get(id=app.job.id)
+    
+    app.status = 'ACCT'
+    app.save()
 
-
-
+    return redirect(reverse('TinDevApp:OfferView',kwargs={'name':name}))
 
 
 

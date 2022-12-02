@@ -14,15 +14,21 @@
 <body>
     <div class="loginBody">
         <img src="{% static 'Logo.jpg' %}" alt="TinDev Logo" width="250">
-        <div class="mx-auto" style="width: 20rem;">
+        <div class="mx-auto" style="width: 25rem;">
             <div class="card text-white mb-3" style="max-width: 30rem;">
                 <div class="card-body">
                     <h5 class="card-title">{% block h5 %}{% endblock %}</h5>
                     <div class="form-group">
                         <form method="post"> {% csrf_token %}
                             {{ form.as_p }}
+                            {% block button %}
+                            {% if user == False %}
                             <div class="col-md-12 text-center">
                                 <input type="submit" value="Register" class="btn btn-light">
+                            {% elif user == True %} 
+                                <input type="submit" value="Save" class="btn btn-light">
+                            {% endif %}
+                            {% endblock %}
                             </div>
                         </form>
                     </div>
