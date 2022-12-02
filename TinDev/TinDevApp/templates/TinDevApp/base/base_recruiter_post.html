@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+{%for item in list%}
+	<ul class="list-group">
+		<li class="list-group-item"> 
+			<h1>Position: {{item.position}} <span class="badge bg-primary rounded-pill"> {{item.applicant_count}} </span> </h1>
+				<p> 
+					<h2> &emsp; Company: {{item.company}}</h2>
+					<h2> &emsp; Skills: {{item.skills}}</h2>
+					{% if item.active == 'A' %}		
+						<h2> &emsp; Status: Active</h2>
+					{% else %}
+						<h2> &emsp; Status: Inactive</h2>
+					{% endif %}
+
+					{% if item.pos_type == 'FULL' %}		
+						<h2> &emsp; Position Type: Full-Time</h2>
+					{% else %}
+						<h2> &emsp; Position Type: Part-Time</h2>
+					{% endif %}
+				</p>
+
+				<p> 
+					<a href="{% url 'TinDevApp:postDelete' name=name id_num=item.pk%}" class="btn btn-danger" role="button">Delete Post</a> 
+					<a href="{% url 'TinDevApp:postUpdate' name=name id_num=item.pk%}" class="btn btn-danger" role="button">Update Post</a> 
+					<a href="{% url 'TinDevApp:postViewApplicant' name=name id_num=item.pk %}" class="btn btn-primary" role="button">View Applicants</a>
+				</p>
+		</li>
+	</ul>		
+{% endfor %}    
+</html>

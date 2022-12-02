@@ -89,7 +89,6 @@
 /* Style for Second Navbar */
 .second-navbar {
     float: right;
-    padding-top: 1.75em;
     display: inline-block;
     margin-right: 250px;
 }
@@ -110,7 +109,6 @@
 .second-navbar a.active {
     font-weight: 700;
     color: var(--palette_6);
-    padding: 5px;
     border-left: 2px solid var(--palette_6);
     border-right: 2px solid var(--palette_6);
     border-top: 2px solid var(--palette_6);
@@ -124,7 +122,6 @@
     float: right;
     display: flex;
     justify-content: space-between;
-    margin-top: 3px;
     margin-bottom: 5px;
     margin-right: 40px;
     margin-left: 30px;
@@ -149,7 +146,8 @@
     text-align: center;
     text-decoration: none;
 }
-  
+
+/* Style for Dashboard */
 .dashboard {
     box-sizing: border-box;
     position: relative;

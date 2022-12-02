@@ -22,8 +22,13 @@
                  </p>
                  {% block button %}
                  <p>
+                    {% if active == 'Active' or active == 'All' or active == 'Description Searched' or active == 'Zipcode Searched' %}
                      <a href="{% url 'TinDevApp:CandidateApply' name=name id_num=item.pk %}" class="btn btn-danger" role="button">Apply</a>
+                    {% endif %}
+
+                    {% if active == 'Active' or active == 'Description Searched' or active == 'Zipcode Searched' %}
                      <a href="{% url 'TinDevApp:CandidateHide' name=name id_num=item.pk %}" class="btn btn-danger" role="button">Not Interested</a>
+                    {% endif %}
                  </p>
                  {% endblock %}
                </li>

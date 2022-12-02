@@ -1,23 +1,25 @@
+{% extends "TinDevApp/base/base_home.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html>
 
-<head>
-    <meta charset="utf-8">
-    <title>TinDev - {{name}}: {{post.position}} Posting</title>
-    <!-- Add Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-	
-	<link rel="stylesheet" href="{% static 'style.css' %}">
-	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-
-</head>
-
-<body>
-
-		<h1><center>View {{post.position}} for {{post.company}}'s Applicants</center></h1>
-		
+{% block title %}Recruiter's Homepage{% endblock %}
+ 
+{% block nav %}
+	<nav class="navbar primary">
+		<a class="nav-item" href="{% url 'TinDevApp:recruiter-home' name %}">Home</a>
+		<a class="nav-item" href="{% url 'TinDevApp:postAdd' name %}">Create a Post</a>
+		<a class="nav-item active" href="{% url 'TinDevApp:postViewActive' name %}">View Current Posts</a>
+		<a class="nav-item" href="{% url 'TinDevApp:recruiter-login' %}">Logout</a>
+	</nav>
+ 
+   <nav class="navbar second-navbar">
+       <a href="{% url 'TinDevApp:postViewAll' name=name %}" class="sub-nav {% if active == 'All' %}active{% endif %}">All Posts</a>
+       <a href="{% url 'TinDevApp:postViewActive' name=name %}" class="sub-nav {% if active == 'Active' or active == 'Description Searched' or active == 'Zipcode Searched' %}active{% endif %}">Active Posts</a>
+       <a href="{% url 'TinDevApp:postViewInactive' name=name %}" class="sub-nav {% if active == 'Inactive' %}active{% endif %}">Inactive Posts</a>
+   </nav>
+{% endblock %}
+{% block content %}
+	<h3 style="color: #2374ab; font-weight: 700;"><center>Applicants for {{post.company}}'s {{post.position}} Position</center></h3>
+   <div class="dashboard">
 		{%for app in list%}
 			<ul class="list-group">
 					<li class="list-group-item"> 
@@ -43,31 +45,26 @@
 					</li>
 			</ul>		
     	{% endfor %}    
-		<br>
-		<div class="mx-auto" style="width: 20rem;">
-            <div class="card text-white mb-3" style="max-width: 30rem;">
-				<div class="card-body">
-					<h4 class="card-title"><u>Extend Offer</u></h4>
-					<form method="post">{% csrf_token %}
-						{%for app in list%}
-							{% if app.status == "APLY"%}
-								<input type="checkbox" value="{{app.id}}" name="applicant_{{app.id}}" id="app_{{app.id}}">
-								<label for="{{app.candidate.name}}">{{app.candidate.name}}</label>
-								<br>
-							{% endif %}
-						{% endfor %}
-						{{form.as_p}}
-						<br>
-						<input type="submit" value="Save" class="btn btn-light">
-					</form>
-				</div>
-			</div>
-		</div>
+   	</div>
 
-<!-- Import's Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"></script>
-</body>
-
-</html>
+	<br>
+	<div class="mx-auto" style="width: 20rem;">
+		<div class="card mb-3" style="margin-top: 15px">
+			<div class="card-body">
+				<h4 class="card-title" style="font-weight: 700; color: #f65454"><u>Extend Offer</u></h4>
+				<form method="post">{% csrf_token %}
+					{%for app in list%}
+						{% if app.status == "APLY"%}
+							<input type="checkbox" value="{{app.id}}" name="applicant_{{app.id}}" id="app_{{app.id}}">
+							<label for="{{app.candidate.name}}" style="font-size: 16px; padding-bottom: 3px;">{{app.candidate.name}}</label>
+							<br>
+						{% endif %}
+					{% endfor %}
+					{{form.as_p}}
+					<br>
+					   <input type="submit" value="Save" class="btn btn-light">
+				   </form>
+			   </div>
+		   </div>
+	</div>
+{% endblock %}

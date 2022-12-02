@@ -12,6 +12,42 @@ def redirect_view(request, url):
     response = redirect(url)
     return response
 
+# Candidate's register page
+def CandidateCreateView(request):
+    if request.method == 'POST':
+        form = forms.CandidateRegisterForm(request.POST)
+        if form.is_valid():
+            # check if the username already exists
+            new_username = form.cleaned_data.get('username')
+            if Candidate.objects.filter(username=new_username).count() > 0:
+                return HttpResponse('Username already exists.')
+            else:
+                # save data and redirect to login
+                form.save()
+                return redirect('TinDevApp:candidate-login')
+    else:
+        form = forms.CandidateRegisterForm()
+
+    return render(request, 'TinDevApp/register_form.html', context={'form': form, 'register': 'candidate'})
+
+# Recruiter's register page
+def RecruiterCreateView(request):
+    if request.method == 'POST':
+        form = forms.RecruiterRegisterForm(request.POST)
+        if form.is_valid():
+            # check if the username already exists
+            new_username = form.cleaned_data.get('username')
+            if Recruiter.objects.filter(username=new_username).count() > 0:
+                return HttpResponse('Username already exists.')
+            else:
+                # save data and redirect to login
+                form.save()
+                return redirect('TinDevApp:candidate-login')
+    else:
+        form = forms.RecruiterRegisterForm()
+    
+    return render(request, 'TinDevApp/register_form.html', context={'form': form, 'register': 'recruiter'})
+
 # Candidate's login page
 def candidateLoginPage(request):
     form = forms.LoginForm()
@@ -44,7 +80,7 @@ def candidateLoginPage(request):
                 return response
             else:
                 message = f'Login Failed'
-    return render(request, 'TinDevApp/candidate_login.html', context={'form': form, 'message':message})
+    return render(request, 'TinDevApp/login_form.html', context={'form': form, 'message':message, 'register': 'candidate'})
 
 # Recruiter's login page
 def recruiterLoginPage(request):
@@ -82,7 +118,7 @@ def recruiterLoginPage(request):
                 return response
             else:
                 message = f'Login Failed'
-    return render(request, 'TinDevApp/recruiter_login.html', context={'form': form, 'message':message})
+    return render(request, 'TinDevApp/login_form.html', context={'form': form, 'message':message, 'register': 'recruiter'})
 
 # Recruiter's home page
 def RecruiterPage(request, name):
@@ -133,45 +169,6 @@ def CandidateOfferAccept(request, name, id_num):
 
     return redirect(reverse('TinDevApp:OfferView',kwargs={'name':name}))
 
-    
-    
-# Candidate's register page
-def CandidateCreateView(request):
-    if request.method == 'POST':
-        form = forms.CandidateRegisterForm(request.POST)
-        if form.is_valid():
-            # check if the username already exists
-            new_username = form.cleaned_data.get('username')
-            if Candidate.objects.filter(username=new_username).count() > 0:
-                return HttpResponse('Username already exists.')
-            else:
-                # save data and redirect to login
-                form.save()
-                return redirect('TinDevApp:candidate-login')
-    else:
-        form = forms.CandidateRegisterForm()
-
-    return render(request, 'TinDevApp/candidate_form.html', context={'form': form})
-
-# Recruiter's register page
-def RecruiterCreateView(request):
-    if request.method == 'POST':
-        form = forms.RecruiterRegisterForm(request.POST)
-        if form.is_valid():
-            # check if the username already exists
-            new_username = form.cleaned_data.get('username')
-            if Recruiter.objects.filter(username=new_username).count() > 0:
-                return HttpResponse('Username already exists.')
-            else:
-                # save data and redirect to login
-                form.save()
-                return redirect('TinDevApp:candidate-login')
-    else:
-        form = forms.RecruiterRegisterForm()
-    
-    return render(request, 'TinDevApp/recruiter_form.html', context={'form': form})
-
-
 # Creating/Editing/Deleting Posts # 
 
 # Creating a New Post
@@ -187,7 +184,7 @@ def PostCreate(request, name):
             return redirect(reverse('TinDevApp:postViewAll',kwargs={'name': name}))
     else:
         form = forms.PostForm()
-    return render(request, 'TinDevApp/post_form.html', {'form': form, 'name': name})
+    return render(request, 'TinDevApp/recruiter_post.html', {'form': form, 'name': name, 'post': 'new'})
 
 # Deleting a Post
 def PostDeleteRecruiter(request, name, id_num):
@@ -211,9 +208,10 @@ def PostUpdateRecruiter(request, name, id_num):
 
     context = {
         'form': form,
-        'name': name
+        'name': name,
+        'post' : 'update',
     }
-    return render(request, 'TinDevApp/post_update.html', context)
+    return render(request, 'TinDevApp/recruiter_post.html', context)
 
 # View Posts for Recruiter #
 
@@ -259,7 +257,7 @@ def CandidateReject(request, name, id_num, app_id):
     app =  Application.objects.get(id=app_id)
     app.status = 'REJT'
     app.save()
-    return render(request, 'TinDevApp/candidate_reject.html', {'name':name, 'id_num':id_num})
+    return render(request, 'TinDevApp/recruiter_message.html', {'name':name, 'id_num':id_num, 'message': 'Candidate Removed!'})
 
 # View Posts of Candidate #
 
@@ -277,8 +275,8 @@ def PostViewCandidateActive(request, name):
     application_list = Application.objects.filter(candidate_username=name).values_list('job_num',flat=True)
     post_list = list(Post.objects.filter(active='A'))
     applied_list = [x for x in post_list if x.id in application_list]
-    post_list = [x for x in post_list if (x.id not in hide_list and x.id not in application_list)]
-    return render(request, 'TinDevApp/candidate_view_active_post.html', {'post_list':post_list, 'apply_list': applied_list, 'name':name, 'active':'Active'})
+    post_list = [x for x in post_list if (x.id not in hide_list and x.id)]
+    return render(request, 'TinDevApp/candidate_view_post.html', {'post_list':post_list, 'apply_list': applied_list, 'name':name, 'active':'Active'})
 
 # View Inactive Posts
 def PostViewCandidateInactive(request, name):
@@ -286,8 +284,7 @@ def PostViewCandidateInactive(request, name):
     application_list = Application.objects.filter(candidate_username=name).values_list('job_num',flat=True)
     post_list = list(Post.objects.filter(active='I'))
     applied_list = [x for x in post_list if x.id in application_list]
-    #post_list = [x for x in post_list if x not in applied_list]
-    return render(request, 'TinDevApp/candidate_view_inactive_post.html', {'post_list':post_list, 'apply_list': applied_list, 'name':name, 'active':'Inactive'})
+    return render(request, 'TinDevApp/candidate_view_post.html', {'post_list':post_list, 'apply_list': applied_list, 'name':name, 'active':'Inactive'})
 
 # Search posts by description
 def PostViewCandidateSearchDescription(request, name):
@@ -299,8 +296,9 @@ def PostViewCandidateSearchDescription(request, name):
         Q(description__icontains=query) 
     )
 
+    post_list = [x for x in post_list if x.active == 'A'] # can only search active post
     applied_list = [x for x in post_list if x.id in application_list]
-    #post_list = [x for x in post_list if x not in applied_list]
+
     return render(request, 'TinDevApp/candidate_view_post.html', {'post_list':post_list, 'apply_list': applied_list, 'name':name, 'active':'Description Searched'})
 
 # Search posts by zipcode
@@ -314,7 +312,8 @@ def PostViewCandidateSearchZipCode(request, name):
     )
 
     applied_list = [x for x in post_list if x.id in application_list]
-    #post_list = [x for x in post_list if x not in applied_list]
+    post_list = [x for x in post_list if x.active == 'A'] # can only search active post
+    
     return render(request, 'TinDevApp/candidate_view_post.html', {'post_list':post_list, 'apply_list': applied_list, 'name':name, 'active':'Zipcode Searched'})
 
 
@@ -332,7 +331,7 @@ def CandidateApply(request, name, id_num):
                             candidate = candidate, status='APLY')
         application.save()
 
-    return render(request, 'TinDevApp/candidate_apply_post.html', {'name':name})
+    return render(request, 'TinDevApp/candidate_message.html', {'name':name, 'message': 'Applied!'})
 
 # Remove Application
 def CandidateRemoveApplication(request, name, id_num):
@@ -343,7 +342,7 @@ def CandidateRemoveApplication(request, name, id_num):
     post = Post.objects.get(id=id_num)
     post.applicant_count -= 1
     post.save()
-    return render(request, 'TinDevApp/candidate_remove_apply.html', {'name':name})
+    return render(request, 'TinDevApp/candidate_message.html', {'name':name, 'message': 'Application Removed!'})
 
 #Application View
 def CandidateViewApplication(request, name):

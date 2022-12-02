@@ -1,10 +1,10 @@
 {% extends "TinDevApp/base/base_login.html" %}
 
-{% block title %}TinDev - Recruiter's Login{% endblock %}
+{% block title %}TinDev - {% if register == 'candidate' %}Candidate{% elif register == 'recruiter' %}Recruiter{% endif %}'s Login{% endblock %}
 
 {% block content %}
 <div class="card-body">
-    <h5 class="card-title">Recruiter Login</h5>
+    <h5 class="card-title">{% if register == 'candidate' %}Candidate{% elif register == 'recruiter' %}Recruiter{% endif %} Login</h5>
         <p>{{ message }}</p>
         <form method="post">
             {{ form.as_p }}
@@ -15,8 +15,13 @@
         </form>
     <br>
     <div class="col-md-12 text-center">
+        {% if register == 'candidate' %}
+        <a href="{% url 'TinDevApp:candidateAdd' %}" class="link-light">Join as Candidate</a>
+        <a href="{% url 'TinDevApp:recruiter-login' %}" class="link-light">Login as Recruiter</a>
+        {% elif register == 'recruiter' %}
         <a href="{% url 'TinDevApp:recruiterAdd' %}" class="link-light">Join as Recruiter</a>
         <a href="{% url 'TinDevApp:candidate-login' %}" class="link-light">Login as Candidate</a>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

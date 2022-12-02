@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>TinDev - Create New Job Post</title>
+    <title>TinDev - {% if post == 'new' %}Create New{% elif post == 'update' %}Update{% endif %} Job Post</title>
     <link rel="stylesheet" href="{% static 'style.css' %}">
     <!-- Add Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -14,15 +14,16 @@
 <body>
     <div class="loginBody">
         <img src="{% static 'Logo.jpg' %}" alt="TinDev Logo" width="250">
-        <div class="mx-auto" style="width: 20rem;">
+        <div class="mx-auto" style="width: 25rem;">
             <div class="card text-white mb-3" style="max-width: 30rem;">
                 <div class="card-body">
-                    <h5 class="card-title">Create New Job Post</h5>
+                    <h5 class="card-title">{% if post == 'new' %}Create New{% elif post == 'update' %}Update{% endif %} Job Post</h5>
                     <div class="form-group">
                         <form method="post"> {% csrf_token %}
-                            {{ form.as_p }}
+                            {{ form.as_p}}
                             <div class="col-md-12 text-center">
                                 <input type="submit" value="Save" class="btn btn-light">
+                                <a class="btn btn-light" href="{% url 'TinDevApp:postViewActive' name=name %}">Discard</a>
                             </div>
                         </form>
                     </div>

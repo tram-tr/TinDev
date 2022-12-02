@@ -1,98 +1,36 @@
+{% extends "TinDevApp/base/base_home.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html>
 
-<head>
-    <meta charset="utf-8">
-    <title>TinDev - View {{active}} Post</title>
-    <!-- Add Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-</head>
-
-<body>
-
-		<h1><center>{{active}} Posts</center></h1>
-		<p>
-			<center>
-				<a href="{% url 'TinDevApp:CandidateViewAll' name=name %}" class="btn btn-primary" role="button">All Posts</a>
-				<a href="{% url 'TinDevApp:CandidateViewActive' name=name %}" class="btn btn-primary" role="button">Active Posts</a>
-				<a href="{% url 'TinDevApp:CandidateViewInactive' name=name %}" class="btn btn-primary" role="button">Inactive Posts</a>
-				<a href="{% url 'TinDevApp:candidate-home' name=name %}" class="btn btn-primary" role="button">Return Home</a>
-			</center>
-		</p>
-
-
-		<form action="{% url 'TinDevApp:CandidateSearchDescription' name%}" method="get">
-			<h3>Search Bar (Descriptions):	 <input name="q" type="text" placeholder="Search Descriptions..."></h3>
-		</form>
-
-		<form action="{% url 'TinDevApp:CandidateSearchZipcode' name%}" method="get">
-			<h3>Search Bar (ZipCode): <input name="q" type="number" placeholder="Search ZipCodes..."></h3>
-		</form>
-
-		{%for item in post_list%}
-			<ul class="list-group">
-					<li class="list-group-item"> 
-						<h1>Position: {{item.position}} <span class="badge bg-primary rounded-pill">{{item.applicant_count}} </span> </h1>
-						<p> 
-							<h2> &emsp; Description: {{item.description}}</h2>
-							<h2> &emsp; Company: {{item.company}}</h2>
-							<h2> &emsp; Skills: {{item.skills}}</h2>
-							{% if item.active == 'A' %}		
-								<h2> &emsp; Status: Active</h2>
-							{% else %}
-								<h2> &emsp; Status: Inactive</h2>
-							{% endif %}
-
-							{% if item.pos_type == 'FULL' %}		
-								<h2> &emsp; Status: Full-Time</h2>
-							{% else %}
-								<h2> &emsp; Status: Part-Time</h2>
-							{% endif %}
-					  </p>
-						<p> 
-							<a href="{% url 'TinDevApp:CandidateApply' name=name id_num=item.pk %}" class="btn btn-danger" role="button">Apply</a> 
-						</p>
-					</li>
-			</ul>		
-   		{% endfor %}
-	
-		{%for item in apply_list%}
-		   <ul class="list-group">
-				   <li class="list-group-item">
-						<h1>Position: {{item.position}} 
-							<span class="badge bg-primary rounded-pill"> {{item.applicant_count}} </span> 
-						</h1>
-					   <p> 
-						   <h2> &emsp; Company: {{item.company}}</h2>
-						   <h2> &emsp; Skills: {{item.skills}}</h2>
-						   {% if item.active == 'A' %}		
-							   <h2> &emsp; Status: Active</h2>
-						   {% else %}
-							   <h2> &emsp; Status: Inactive</h2>
-						   {% endif %}
-	   
-						   {% if item.pos_type == 'FULL' %}		
-							   <h2> &emsp; Status: Full-Time</h2>
-						   {% else %}
-							   <h2> &emsp; Status: Part-Time</h2>
-						   {% endif %}
-						 </p>
-					   <p> 
-						   <a href="{% url 'TinDevApp:CandidateUnapply' name=name id_num=item.pk %}" class="btn btn-danger" role="button">Remove Application</a> 
-					   </p>
-
-				   </li>
-		   </ul>		
-		   {% endfor %}  
-
-
-<!-- Import's Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"></script>
-</body>
-
-</html>
+{% block title %}Candidate's Homepage{% endblock %}
+ 
+{% block nav %}
+   <nav class="navbar primary">
+       <a class="nav-item" href="{% url 'TinDevApp:candidate-home' name %}">Home</a>
+       <a class="nav-item active" href="{% url 'TinDevApp:CandidateViewActive' name %}">Job Board</a>
+       <a class="nav-item" href="{% url 'TinDevApp:ApplicationView' name %}">My Applications</a>
+       <a class="nav-item" href="{% url 'TinDevApp:OfferView' name %}">My Offers</a>
+       <a class="nav-item" href="{% url 'TinDevApp:candidate-login' %}">Logout</a>
+   </nav>
+ 
+   <nav class="navbar second-navbar">
+       <a href="{% url 'TinDevApp:CandidateViewAll' name=name %}" class="sub-nav {% if active == 'All' %}active{% endif %}">All Posts</a>
+       <a href="{% url 'TinDevApp:CandidateViewActive' name=name %}" class="sub-nav {% if active == 'Active' or active == 'Description Searched' or active == 'Zipcode Searched' %}active{% endif %}">Active Posts</a>
+       <a href="{% url 'TinDevApp:CandidateViewInactive' name=name %}" class="sub-nav {% if active == 'Inactive' %}active{% endif %}">Inactive Posts</a>
+   </nav>
+{% endblock %}
+{% block content %}
+   <div class="search-bar">
+       <form class="search-bar" action="{% url 'TinDevApp:CandidateSearchDescription' name%}" method="get">
+           <h3><button class="search-btn">Search</button><input class="search-box" name="q" type="text" placeholder="Search Descriptions..."></h3>
+       </form>
+  
+       <form class="search-bar" action="{% url 'TinDevApp:CandidateSearchZipcode' name%}" method="get">
+           <h3><button class="search-btn">Search</button><input class="search-box" name="q" type="number" placeholder="Search Zip Codes..."></h3>
+       </form>
+   </div>
+  
+   <div class="dashboard">
+       {% include "TinDevApp/base/base_candidate_post.html" with post_list=post_list apply_list=apply_list active=active %}
+   </div>
+  
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "TinDevApp/base/base_register.html" %}
+
+{% block title %}TinDev - Create {% if register == 'candidate' %}Candidate{% elif register == 'recruiter' %}Recruiter{% endif %}'s Account{% endblock %}
+
+{% block h5 %}Create Candidate's Account{% endblock %}
+
+{% block content %}
+<div class="col-md-12 text-center">
+    {% if register == 'candidate' %}
+    <a href="{% url 'TinDevApp:recruiterAdd' %}" class="link-light">Join as Recruiter</a>
+    <a href="{% url 'TinDevApp:candidate-login' %}" class="link-light">Login as Candidate</a>
+    {% elif register == 'recruiter' %} 
+    <a href="{% url 'TinDevApp:candidateAdd' %}" class="link-light">Join as Candidate</a>
+    <a href="{% url 'TinDevApp:recruiter-login' %}" class="link-light">Login as Recruiter</a>
+    {% endif %}
+</div>
+{% endblock %}

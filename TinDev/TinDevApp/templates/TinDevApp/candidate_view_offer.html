@@ -1,53 +1,42 @@
+{% extends "TinDevApp/base/base_home.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html>
 
-<head>
-    <meta charset="utf-8">
-    <title>TinDev - Current Offers</title>
-    <!-- Add Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-</head>
+{% block title %}Candidate's Homepage{% endblock %}
+ 
+{% block nav %}
+   <nav class="navbar primary">
+       <a class="nav-item" href="{% url 'TinDevApp:candidate-home' name %}">Home</a>
+       <a class="nav-item" href="{% url 'TinDevApp:CandidateViewActive' name %}">Job Board</a>
+       <a class="nav-item" href="{% url 'TinDevApp:ApplicationView' name %}">My Applications</a>
+       <a class="nav-item active" href="{% url 'TinDevApp:OfferView' name %}">My Offers</a>
+       <a class="nav-item" href="{% url 'TinDevApp:candidate-login' %}">Logout</a>
+   </nav>
+{% endblock %}
 
-<body>
-
-		<h1><center>Current Offers</center></h1>
-        
-        <p>
-			<center>
-				<a href="{% url 'TinDevApp:candidate-home' name=name %}" class="btn btn-primary" role="button">Return Home</a>
-			</center>
-        </p>
-
-        {%for offer in offers%}
-            {% if offer.app_id.status == 'EXND' %}
-            <ul class="list-group">
-                    <li class="list-group-item"> 
-                        <h1>{{offer.app_id.job.position}} for {{offer.app_id.job.company}}</h1>
+{% block content %}
+   <div class="dashboard">
+    {%for offer in offers%}
+        {% if offer.app_id.status == 'EXND' %}
+        <ul class="list-group">
+                <li class="list-group-item"> 
+                    <h1>{{offer.app_id.job.position}} for {{offer.app_id.job.company}}</h1>
+                    <p>
                         <h2 style="color:orange;">Status: Offer Extended </h2>
                         <h2>Salary: ${{offer.yearly_salary}}</h2>
                         <h2>Expiration Date: {{offer.expiration_date}}</h2>
-                    </li>
-            </ul>   
-            <a href="{% url 'TinDevApp:CandidateOfferReject' name=name id_num=offer.app_id.id %}" class="btn btn-danger" role="button">Reject Offer</a>
-            <a href="{% url 'TinDevApp:CandidateOfferAccept' name=name id_num=offer.app_id.id %}" class="btn btn-danger" role="button">Accept Offer</a> 
-            {% elif offer.app_id.status == 'EXPR' %}
-            <ul class="list-group">
-                <li class="list-group-item"> 
-                    <h1>{{offer.app_id.job.position}} for {{offer.app_id.job.company}}</h1>
-                    <h2 style="color:red;">Status: Offer Expired on {{offer.expiration_date}}</h2>
+                        <a href="{% url 'TinDevApp:CandidateOfferReject' name=name id_num=offer.app_id.id %}" class="btn btn-danger" role="button">Reject Offer</a>
+                        <a href="{% url 'TinDevApp:CandidateOfferAccept' name=name id_num=offer.app_id.id %}" class="btn btn-danger" role="button">Accept Offer</a> 
+                    </p>
                 </li>
-            </ul>   
-            {% endif %}
-        {% endfor %}
-
-
-
-<!-- Import's Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"></script>
-</body>
-
-</html>
+        </ul>   
+        {% elif offer.app_id.status == 'EXPR' %}
+        <ul class="list-group">
+            <li class="list-group-item"> 
+                <h1>{{offer.app_id.job.position}} for {{offer.app_id.job.company}}</h1>
+                <h2 style="color:red;">Status: Offer Expired on {{offer.expiration_date}}</h2>
+            </li>
+        </ul>   
+        {% endif %}
+    {% endfor %}
+   </div>
+{% endblock %}
