@@ -105,25 +105,19 @@ class Application(models.Model):
     def compatibility_score(self):
         score = 0
 
-        job_skills = [skill.lower() for skill in self.job.skills.split(',')]
-        candidate_skills = [skill.lower() for skill in self.candidate.skills.split(',')]
+        job_skills = self.job.skills.lower()
+        candidate_skills = self.candidate.skills.lower()
 
         # if candidate has no skill return 0
         if len(candidate_skills) == 0:
             return 0
 
-        job_skills = set(job_skills)
-        candidate_skills = set(candidate_skills)
+        # score = similarity between two strings
+        job_skills = job_skills + ' ' * (len(candidate_skills) - len(job_skills))
+        candidate_skills = candidate_skills + ' ' * (len(job_skills) - len(candidate_skills))
 
-        # score = percentage the overlap is if compared to the union of both lists + years of experience 
-        intersect = job_skills & candidate_skills
-        union = job_skills | candidate_skills
-        score = round(len(intersect) / len(union)) * 100
-        if score <= 90 and self.candidate.years > 3:
-            score += 10
-        if score > 100:
-            score = 100
-        return score
+        score = sum(1 if i == j else 0 for i, j in zip(job_skills, candidate_skills)) / float(len(job_skills))
+        return round(score * 100, 2)
 
 class NotInterest(models.Model):
     job_num = models.IntegerField()
