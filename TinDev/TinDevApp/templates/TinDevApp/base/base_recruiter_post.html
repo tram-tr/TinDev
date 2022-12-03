@@ -21,8 +21,8 @@
 				</p>
 
 				<p> 
-					<a href="{% url 'TinDevApp:postDelete' name=name id_num=item.pk%}" class="btn btn-danger" role="button">Delete Post</a> 
-					<a href="{% url 'TinDevApp:postUpdate' name=name id_num=item.pk%}" class="btn btn-danger" role="button">Update Post</a> 
+					<a href="{% url 'TinDevApp:postDelete' name=name id_num=item.pk%}" class="btn btn-primary" role="button">Delete Post</a> 
+					<a href="{% url 'TinDevApp:postUpdate' name=name id_num=item.pk%}" class="btn btn-primary" role="button">Update Post</a> 
 					<a href="{% url 'TinDevApp:postViewApplicant' name=name id_num=item.pk %}" class="btn btn-primary" role="button">View Applicants</a>
 				</p>
 		</li>
