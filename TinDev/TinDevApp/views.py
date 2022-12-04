@@ -12,6 +12,9 @@ def redirect_view(request, url):
     response = redirect(url)
     return response
 
+def homeView(request):
+    return render(request, 'TinDevApp/home_page.html')
+
 # Candidate's register page
 def CandidateCreateView(request):
     if request.method == 'POST':
