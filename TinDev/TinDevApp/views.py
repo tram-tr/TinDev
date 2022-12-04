@@ -262,8 +262,9 @@ def CandidateReject(request, name, id_num, app_id):
 # View All Posts (including Active, Inactive, Not Interested)
 def PostViewCandidateAll(request, name):
     application_list = list(Application.objects.filter(candidate_username=name).values_list('job_num',flat=True))
-    post_list = list(Post.objects.all())
-    applied_list = [x for x in post_list if x.id in application_list]
+    posts = list(Post.objects.all())
+    post_list = [x for x in posts if x.id not in application_list]
+    applied_list = [x for x in posts if x.id in application_list]
     return render(request, 'TinDevApp/candidate_view_post.html', {'post_list':post_list, 'apply_list': applied_list, 'name':name, 'active':'All'})
 
 # View Active Posts
@@ -271,17 +272,18 @@ def PostViewCandidateActive(request, name):
     # if candidate is not interested in the post, hide it
     hide_list = NotInterest.objects.filter(candidate_username=name).values_list('job_num', flat=True)
     application_list = Application.objects.filter(candidate_username=name).values_list('job_num',flat=True)
-    post_list = list(Post.objects.filter(active='A'))
-    applied_list = [x for x in post_list if x.id in application_list]
-    post_list = [x for x in post_list if (x.id not in hide_list and x.id)]
+    posts = list(Post.objects.filter(active='A'))
+    applied_list = [x for x in posts if x.id in application_list]
+    post_list = [x for x in posts if (x.id not in hide_list and x.id and x.id not in application_list)]
     return render(request, 'TinDevApp/candidate_view_post.html', {'post_list':post_list, 'apply_list': applied_list, 'name':name, 'active':'Active'})
 
 # View Inactive Posts
 def PostViewCandidateInactive(request, name):
     # Candidate is still able to remove application
     application_list = Application.objects.filter(candidate_username=name).values_list('job_num',flat=True)
-    post_list = list(Post.objects.filter(active='I'))
-    applied_list = [x for x in post_list if x.id in application_list]
+    posts = list(Post.objects.filter(active='I'))
+    applied_list = [x for x in posts if x.id in application_list]
+    post_list = [x for x in posts if x.id not in application_list]
     return render(request, 'TinDevApp/candidate_view_post.html', {'post_list':post_list, 'apply_list': applied_list, 'name':name, 'active':'Inactive'})
 
 # Search posts by description
