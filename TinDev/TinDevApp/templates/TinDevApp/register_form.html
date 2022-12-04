@@ -3,7 +3,6 @@
 {% block title %}TinDev - Create {% if register == 'candidate' %}Candidate{% elif register == 'recruiter' %}Recruiter{% endif %}'s Account{% endblock %}
 
 {% block h5 %}Create {% if register == 'candidate' %}Candidate{% elif register == 'recruiter' %}Recruiter{% endif %}'s Account{% endblock %}
-
 {% block button %} 
     {% with user=user %}
         {{ block.super }}

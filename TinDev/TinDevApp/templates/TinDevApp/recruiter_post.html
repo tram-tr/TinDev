@@ -13,7 +13,11 @@
 
 <body>
     <div class="loginBody">
-        <img src="{% static 'Logo.jpg' %}" alt="TinDev Logo" width="250">
+        {% block logo %}
+            <a href="{% url 'TinDevApp:recruiter-home' name %}">
+                <img src="{% static 'Logo.jpg' %}" alt="TinDev Logo" width="250">
+            </a>
+        {% endblock %}
         <div class="mx-auto" style="width: 25rem;">
             <div class="card text-white mb-3" style="max-width: 30rem;">
                 <div class="card-body">

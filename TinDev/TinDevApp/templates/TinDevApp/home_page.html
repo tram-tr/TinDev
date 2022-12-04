@@ -13,7 +13,9 @@
 
 <body>
     <div class="loginBody">
-        <img src="{% static 'Logo.jpg' %}" alt="TinDev Logo" width="250">
+        <a href="{% url 'TinDevApp:home-page' %}">
+            <img src="{% static 'Logo.jpg' %}" alt="TinDev Logo" width="250">
+        </a>
         <div class ="mx-auto" style="width:20rem";>
             <div class="card text-white mb-3" style="max-width: 30rem;">
                 <div id ="card-body">

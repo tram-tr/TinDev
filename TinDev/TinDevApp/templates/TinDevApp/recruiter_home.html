@@ -2,6 +2,12 @@
 {% load static %}
 {% block title %}Recruiter's Homepage{% endblock %}
 
+{% block logo %}
+<a href="{% url 'TinDevApp:recruiter-home' name %}">
+    <img id ="tindev_logo" src="{% static 'Logo.jpg' %}" alt="tindev-logo">
+</a>
+{% endblock %}
+
 {% block nav %} 
     <nav class="navbar primary">
         <a class="nav-item active" href="{% url 'TinDevApp:recruiter-home' name %}">Home</a>

@@ -3,6 +3,12 @@
 
 {% block title %}Candidate's Homepage{% endblock %}
  
+{% block logo %}
+<a href="{% url 'TinDevApp:candidate-home' name %}">
+    <img id ="tindev_logo" src="{% static 'Logo.jpg' %}" alt="tindev-logo">
+</a>
+{% endblock %}
+
 {% block nav %}
    <nav class="navbar primary">
        <a class="nav-item" href="{% url 'TinDevApp:candidate-home' name %}">Home</a>

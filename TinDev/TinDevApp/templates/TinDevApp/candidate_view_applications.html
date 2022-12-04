@@ -1,6 +1,12 @@
 {% extends "TinDevApp/base/base_home.html" %}
 {% load static %}
 
+{% block logo %}
+<a href="{% url 'TinDevApp:candidate-home' name %}">
+    <img id ="tindev_logo" src="{% static 'Logo.jpg' %}" alt="tindev-logo">
+</a>
+{% endblock %}
+
 {% block title %}Candidate's Homepage{% endblock %}
  
 {% block nav %}

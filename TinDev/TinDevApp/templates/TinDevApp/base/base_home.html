@@ -18,7 +18,7 @@
         <div class="wrapper">
             <header class="main_header clearfix">
                 <div class="logo">
-                    <img id="tindev_logo" src="{% static 'Logo.jpg' %}" alt="tindev_logo">
+                    {% block logo %}{% endblock %}
                     <h1 id="hello">Hello, {{name}}!</h1>
                 </div>
                {% block nav %}{% endblock %}
