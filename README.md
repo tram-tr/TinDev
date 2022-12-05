@@ -13,7 +13,7 @@ This is an example of how you may give instructions on setting up your project l
 To get a local copy up and running follow these simple example steps.
 
 ### Prerequisites
-1. Download [Django](https://docs.djangoproject.com/en/3.2/topics/install/#installing-official-release) by clicking link
+1. Download [Django](https://docs.djangoproject.com/en/3.2/topics/install/#installing-official-release) by following the instructions at the link
 2. Make sure installation was succesful
     ```python3 -m django --version```
 
