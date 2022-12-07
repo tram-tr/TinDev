@@ -21,9 +21,11 @@ To get a local copy up and running follow these simple example steps.
 ### Installation
 1. Clone the GitHub Repository
     ```git clone https://github.com/tstinson1/TinDev-Anton-Tyler-Marco-Tram```
-2. Enter the TinDev directory
+2. Enter the src Directory
+    ```cd src```
+3. Enter the TinDev directory
     ```cd TinDev```
-3. Run the server
+4. Run the server
     ```python3 manage.py runserver 0.0.0.0:51102```
-4. Access the site at http://0.0.0.0:51102/TinDevApp
-5. Login or register as a recruiter or candidate
+5. Access the site at http://0.0.0.0:51102/TinDevApp
+6. Login or register as a recruiter or candidate
