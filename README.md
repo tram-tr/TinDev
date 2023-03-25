@@ -1,4 +1,3 @@
-# TinDev-Anton-Tyler-Marco-Tram
 # About The Project
 For this project, we built TinDev, a site aimed at helping candidates connect with recruiters to find the perfect technical position for them.  This site was built with Python and Django.  The front-end of the site uses bootstrap to deliver a clean, professional design feel.
 
